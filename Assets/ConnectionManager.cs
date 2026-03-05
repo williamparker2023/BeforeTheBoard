@@ -6,12 +6,16 @@ using Unity.Services.Authentication;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using TMPro;
+using UnityEngine.UI;
 
 public class ConnectionManager : MonoBehaviour
 {
     [Header("UI")]
     public TMP_InputField joinCodeInput;
     public TMP_Text statusText;
+    [SerializeField] GameObject serverUiObject;
+    [SerializeField] TextMeshProUGUI serverCodeText;
+    [SerializeField] string joinCodeString;
 
     void Awake()
     {
@@ -35,6 +39,8 @@ public class ConnectionManager : MonoBehaviour
         // If you're a client and you connected to host, this will fire too.
         if (statusText != null)
             statusText.text = $"Connected! ClientId={clientId}";
+            serverUiObject.SetActive(false);
+            serverCodeText.text = $"{joinCodeString}";
     }
 
     private void OnClientDisconnected(ulong clientId)
@@ -42,6 +48,8 @@ public class ConnectionManager : MonoBehaviour
         Debug.Log($"Client disconnected: {clientId}");
         if (statusText != null)
             statusText.text = $"Disconnected. ClientId={clientId}";
+            serverUiObject.SetActive(true);
+            serverCodeText.text = $"";
     }
 
     public async void StartHost()
@@ -59,7 +67,10 @@ public class ConnectionManager : MonoBehaviour
         string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
         Debug.Log("Join Code: " + joinCode);
-        if (statusText != null) statusText.text = $"HOST\nCode: {joinCode}";
+        if (statusText != null) {
+            statusText.text = $"HOST\nCode: {joinCode}";
+            joinCodeString = joinCode;
+        }
 
         var transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         transport.SetRelayServerData(AllocationUtils.ToRelayServerData(allocation, connectionType));
