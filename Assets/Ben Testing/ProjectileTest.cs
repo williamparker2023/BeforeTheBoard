@@ -4,7 +4,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 
 [RequireComponent(typeof(NetworkTransform))]
-public class ProjectileTest : MonoBehaviour
+public class ProjectileTest : NetworkBehaviour
 {
     // [SerializeField] float damage = 0.5f;
 
@@ -16,7 +16,15 @@ public class ProjectileTest : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Destroy(gameObject, LIFETIME);
+        if (IsClient)
+        {
+            RequestDestroyServerRpc();
+        }
+        else
+        {
+            Destroy(gameObject, LIFETIME);
+        }
+
         rb = GetComponent<Rigidbody2D>();
         Vector3 direction = transform.position;
         Vector3 rotation = transform.position;
@@ -24,5 +32,12 @@ public class ProjectileTest : MonoBehaviour
         rb.linearVelocity = new Vector2(direction.x, direction.y).normalized * force;
         float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, 0f, rot + 90);
+    }
+
+    [ServerRpc]
+    private void RequestDestroyServerRpc(ServerRpcParams rpcParams = default)
+    {
+        // Only server executes this code
+        Destroy(gameObject, LIFETIME);
     }
 }
