@@ -19,19 +19,23 @@ public class PlayerAppearance : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (IsServer)
-        {
-            // default for everyone based on OwnerClientId
-            byte r = (byte)(50 + (OwnerClientId * 70) % 200);
-            byte g = (byte)(50 + (OwnerClientId * 120) % 200);
-            byte b = (byte)(50 + (OwnerClientId * 170) % 200);
-            netColor.Value = new Color32(r, g, b, 255);
-        }
-
         if (IsOwner)
         {
-            SetMyColorServerRpc(new Color32(255, 0, 0, 255)); // my cube red
+            GetComponent<SpriteRenderer>().color = Color.green;
         }
+        // if (IsServer)
+        // {
+        //     // default for everyone based on OwnerClientId
+        //     byte r = (byte)(50 + (OwnerClientId * 70) % 200);
+        //     byte g = (byte)(50 + (OwnerClientId * 120) % 200);
+        //     byte b = (byte)(50 + (OwnerClientId * 170) % 200);
+        //     netColor.Value = new Color32(r, g, b, 255);
+        // }
+
+        // if (IsOwner)
+        // {
+        //     SetMyColorServerRpc(new Color32(255, 0, 0, 255)); // my cube red
+        // }
     }
 
     public override void OnNetworkDespawn()
