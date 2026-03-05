@@ -41,10 +41,25 @@ public class BenPlayerTest : NetworkBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            // Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-            var instance = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-            var instanceNetworkObject = instance.GetComponent<NetworkObject>();
-            instanceNetworkObject.Spawn();
+            if (IsClient)
+            {
+                RequestSpawnServerRpc();
+            }
+            else
+            {
+                // Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+                var instance = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+                var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                instanceNetworkObject.Spawn();
+            }
         }
+    }
+
+    [ServerRpc]
+    private void RequestSpawnServerRpc(ServerRpcParams rpcParams = default)
+    {
+        // Only server executes this code
+        GameObject spawnedObject = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+        spawnedObject.GetComponent<NetworkObject>().Spawn();
     }
 }
