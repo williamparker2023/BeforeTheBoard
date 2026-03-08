@@ -79,7 +79,7 @@ public class BenPlayerTest : NetworkBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && canFire)
         {
             Quaternion spawnRot = transform.rotation;
             Vector3 spawnPos = transform.position;
@@ -94,6 +94,7 @@ public class BenPlayerTest : NetworkBehaviour
             {
                 RequestSpawnServerRpc(spawnPos, spawnRot);
             }
+            canFire = false;
         }
     }
 

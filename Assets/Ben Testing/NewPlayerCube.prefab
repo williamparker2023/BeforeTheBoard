@@ -185,7 +185,7 @@ MonoBehaviour:
   bullet: {fileID: 8316176547245110427, guid: 2bfd406abd3874e1d8bc6ed911f0829b, type: 3}
   canFire: 0
   timer: 0
-  TIME_BETWEEN_SHOTS: 3
+  TIME_BETWEEN_SHOTS: 0.5
 --- !u!50 &-1708614259379764059
 Rigidbody2D:
   serializedVersion: 5
