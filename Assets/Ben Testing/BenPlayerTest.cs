@@ -9,57 +9,99 @@ public class BenPlayerTest : NetworkBehaviour
     // ============== Physics ==============
     Rigidbody2D rb = null;
     [SerializeField] float SPEED = 0.0f;
-    [SerializeField] Transform bulletTransform;
+    // [SerializeField] Transform bulletTransform;
+
+    // ============== Aiming ==============
+    private Camera mainCam;
+    private Vector3 mousePos;
     public GameObject bullet;
+    public bool canFire;
+    [SerializeField] private float timer;
+    [SerializeField] float TIME_BETWEEN_SHOTS = 3.0f;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {        
-        if (IsOwner)
-        {
-            rb = GetComponent<Rigidbody2D>();
-            GetComponent<SpriteRenderer>().color = Color.green;
-        }
+        if (!IsOwner) return;
+
+        rb = GetComponent<Rigidbody2D>();
+        GetComponent<SpriteRenderer>().color = Color.green;
+        mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (!IsOwner) return;
+
+        if (!IsLocalPlayer)
+        {
+            return;
+        }
         
         PlayerMovement();
+        ShootProjectile();
     }
 
     void PlayerMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-
+        
         Vector2 movement = new Vector2(horizontalInput * SPEED, verticalInput * SPEED);
         rb.linearVelocity = movement;
 
-        if(Input.GetKeyDown(KeyCode.Space))
+    }
+
+    void ShootProjectile()
+    {
+        
+        if (mainCam == null) mainCam = Camera.main;
+
+        // Convert this local client's mouse screen position to world position
+        Vector3 screenPos = Input.mousePosition;
+        screenPos.z = Mathf.Abs(mainCam.transform.position.z - transform.position.z);
+        mousePos = mainCam.ScreenToWorldPoint(screenPos);
+
+        Vector3 aimDirection = mousePos - transform.position;
+        float rotZ = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+        // transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
+
+        if (!canFire)
         {
-            if (IsClient)
+            timer += Time.deltaTime;
+            if (timer >= TIME_BETWEEN_SHOTS)
             {
-                RequestSpawnServerRpc();
+                canFire = true;
+                timer = 0.0f;
             }
-            else
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Quaternion spawnRot = transform.rotation;
+            Vector3 spawnPos = transform.position;
+
+            if (IsServer)
             {
-                // Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-                var instance = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+                var instance = Instantiate(bullet, spawnPos, spawnRot);
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
-                instanceNetworkObject.Spawn();
+                instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
+            }
+            else if (IsClient)
+            {
+                RequestSpawnServerRpc(spawnPos, spawnRot);
             }
         }
     }
 
     [ServerRpc]
-    private void RequestSpawnServerRpc(ServerRpcParams rpcParams = default)
+    private void RequestSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
     {
-        // Only server executes this code
-        GameObject spawnedObject = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
-        spawnedObject.GetComponent<NetworkObject>().Spawn();
+        GameObject spawnedObject = Instantiate(bullet, spawnPos, spawnRot);
+        var netObj = spawnedObject.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
     }
 }
