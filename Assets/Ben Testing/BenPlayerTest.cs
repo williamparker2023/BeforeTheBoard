@@ -79,7 +79,7 @@ public class BenPlayerTest : NetworkBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && canFire)
+        if (Input.GetMouseButtonDown(0) && canFire)
         {
             Quaternion spawnRot = transform.rotation;
             Vector3 spawnPos = transform.position;
