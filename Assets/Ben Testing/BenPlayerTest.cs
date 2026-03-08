@@ -6,6 +6,9 @@ using Unity.Netcode.Components;
 public class BenPlayerTest : NetworkBehaviour
 {
 
+    [SerializeField] int playerClassID = 1; // 0 = bishop, 1 = knight, 2 = rook
+
+
     // ============== Physics ==============
     Rigidbody2D rb = null;
     [SerializeField] float SPEED = 0.0f;
@@ -14,10 +17,18 @@ public class BenPlayerTest : NetworkBehaviour
     // ============== Aiming ==============
     private Camera mainCam;
     private Vector3 mousePos;
+
+    // ============== BISHOP Shooting ==============
     public GameObject bullet;
     public bool canFire;
     [SerializeField] private float timer;
     [SerializeField] float TIME_BETWEEN_SHOTS = 3.0f;
+
+    // ============== KNIGHT Melee ==============
+    public GameObject meleeHitbox;
+    public bool canMelee;
+    [SerializeField] private float meleeTimer;
+    [SerializeField] float TIME_BETWEEN_MELEE = 1.0f;
 
 
 
@@ -42,7 +53,10 @@ public class BenPlayerTest : NetworkBehaviour
         }
         
         PlayerMovement();
+        // if (playerClassID == 0) ShootProjectile();
+        // if (playerClassID == 1) MeleeAttack();
         ShootProjectile();
+        MeleeAttack();
     }
 
     void PlayerMovement()
@@ -53,6 +67,37 @@ public class BenPlayerTest : NetworkBehaviour
         Vector2 movement = new Vector2(horizontalInput * SPEED, verticalInput * SPEED);
         rb.linearVelocity = movement;
 
+    }
+
+    void MeleeAttack()
+    {
+        if (!canMelee)
+        {
+            meleeTimer += Time.deltaTime;
+            if (meleeTimer >= TIME_BETWEEN_MELEE)
+            {
+                canMelee = true;
+                meleeTimer = 0.0f;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1) && canMelee)
+        {
+            Quaternion spawnRot = transform.rotation;
+            Vector3 spawnPos = transform.position;
+
+            if (IsServer)
+            {
+                var instance = Instantiate(meleeHitbox, spawnPos, spawnRot);
+                var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
+            }
+            else if (IsClient)
+            {
+                RequestMeleeSpawnServerRpc(spawnPos, spawnRot);
+            }
+            canMelee = false;
+        }
     }
 
     void ShootProjectile()
@@ -102,6 +147,14 @@ public class BenPlayerTest : NetworkBehaviour
     private void RequestSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
     {
         GameObject spawnedObject = Instantiate(bullet, spawnPos, spawnRot);
+        var netObj = spawnedObject.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+    }
+
+    [ServerRpc]
+    private void RequestMeleeSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
+    {
+        GameObject spawnedObject = Instantiate(meleeHitbox, spawnPos, spawnRot);
         var netObj = spawnedObject.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
     }
