@@ -11,8 +11,7 @@ public class BenPlayerTest : NetworkBehaviour
     [SerializeField] int playerClassID = 1; // 0 = bishop, 1 = knight, 2 = rook
     [SerializeField] public NetworkVariable<FixedString64Bytes> playerUsername = new NetworkVariable<FixedString64Bytes>("User", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private TextMeshProUGUI usernameText;
-
-
+    [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     // ============== Physics ==============
     Rigidbody2D rb = null;
@@ -41,7 +40,7 @@ public class BenPlayerTest : NetworkBehaviour
     void Start()
     {        
         if (!IsOwner) return;
-        
+
         if(IsServer)
         {
             SetPlayerName("Player " + OwnerClientId);
@@ -168,6 +167,19 @@ public class BenPlayerTest : NetworkBehaviour
                 RequestSpawnServerRpc(spawnPos, spawnRot);
             }
             canFire = false;
+        }
+    }
+
+    public void TakeDamage(float damage)
+    {
+        if (!IsServer) return;
+
+        playerHealth.Value -= damage;
+
+        if (playerHealth.Value <= 0)
+        {
+            playerHealth.Value = 0;
+            Debug.Log("Player " + OwnerClientId + " has died.");
         }
     }
 
