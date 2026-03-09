@@ -1,12 +1,17 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using Unity.Collections;
+using TMPro;
 
 [RequireComponent(typeof(NetworkTransform))]
 public class BenPlayerTest : NetworkBehaviour
 {
 
     [SerializeField] int playerClassID = 1; // 0 = bishop, 1 = knight, 2 = rook
+    [SerializeField] public NetworkVariable<FixedString64Bytes> playerUsername = new NetworkVariable<FixedString64Bytes>("User", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] private TextMeshProUGUI usernameText;
+
 
 
     // ============== Physics ==============
@@ -36,10 +41,24 @@ public class BenPlayerTest : NetworkBehaviour
     void Start()
     {        
         if (!IsOwner) return;
+        SetPlayerName("Player " + OwnerClientId);
 
         rb = GetComponent<Rigidbody2D>();
         GetComponent<SpriteRenderer>().color = Color.green;
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+    }
+
+    void SetPlayerName(string name)
+    {
+        if (IsServer)
+        {
+            playerUsername.Value = name;
+            usernameText.text = playerUsername.Value.ToString();
+        }
+        else
+        {
+            RequestSetPlayerNameServerRpc(name);
+        }
     }
 
     // Update is called once per frame
@@ -158,5 +177,12 @@ public class BenPlayerTest : NetworkBehaviour
         GameObject spawnedObject = Instantiate(meleeHitbox, spawnPos, spawnRot);
         var netObj = spawnedObject.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+    }
+
+    [ServerRpc]
+    private void RequestSetPlayerNameServerRpc(string name, ServerRpcParams rpcParams = default)
+    {
+        playerUsername.Value = name;
+        usernameText.text = playerUsername.Value.ToString();
     }
 }
