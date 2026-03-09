@@ -21,19 +21,18 @@ public class WaveEnemy : NetworkBehaviour
                 enemyHealth.Value -= collision.gameObject.GetComponent<ProjectileTest>().damage;
                 Destroy(collision.gameObject);
                 Debug.Log("Enemy hit! Current health: " + enemyHealth.Value);
+            }
 
-                if (enemyHealth.Value <= 0)
+            if (enemyHealth.Value <= 0)
                 {
                     KillEnemy();
-                    // Destroy(gameObject);
                 }
-            }
         }
     }
 
     void KillEnemy()
     {
-        if(IsServer)
+        if(!IsClient && IsServer)
         {
             Destroy(gameObject);
         }
