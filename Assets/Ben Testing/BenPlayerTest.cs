@@ -71,6 +71,8 @@ public class BenPlayerTest : NetworkBehaviour
 
     void MeleeAttack()
     {
+        if (mainCam == null) mainCam = Camera.main;
+
         if (!canMelee)
         {
             meleeTimer += Time.deltaTime;
@@ -83,8 +85,16 @@ public class BenPlayerTest : NetworkBehaviour
 
         if (Input.GetMouseButtonDown(1) && canMelee)
         {
-            Quaternion spawnRot = transform.rotation;
-            Vector3 spawnPos = transform.position;
+            if (mainCam == null) mainCam = Camera.main;
+            Vector3 screenPos = Input.mousePosition;
+            screenPos.z = Mathf.Abs(mainCam.transform.position.z - transform.position.z);
+            Vector3 mouseWorld = mainCam.ScreenToWorldPoint(screenPos);
+
+            Vector3 aimDir = mouseWorld - transform.position;
+            float rotZ = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+            Quaternion spawnRot = Quaternion.Euler(0f, 0f, rotZ + 90f);
+
+            Vector3 spawnPos = transform.position - (spawnRot * Vector3.up) * 0.7f;
 
             if (IsServer)
             {
@@ -104,15 +114,6 @@ public class BenPlayerTest : NetworkBehaviour
     {
         
         if (mainCam == null) mainCam = Camera.main;
-
-        // Convert this local client's mouse screen position to world position
-        Vector3 screenPos = Input.mousePosition;
-        screenPos.z = Mathf.Abs(mainCam.transform.position.z - transform.position.z);
-        mousePos = mainCam.ScreenToWorldPoint(screenPos);
-
-        Vector3 aimDirection = mousePos - transform.position;
-        float rotZ = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-        // transform.rotation = Quaternion.Euler(0f, 0f, rotZ);
 
         if (!canFire)
         {
