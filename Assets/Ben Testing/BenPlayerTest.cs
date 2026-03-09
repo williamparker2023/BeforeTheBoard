@@ -83,7 +83,7 @@ public class BenPlayerTest : NetworkBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(1) && canMelee)
+        if (Input.GetMouseButton(1) && canMelee)
         {
             if (mainCam == null) mainCam = Camera.main;
             Vector3 screenPos = Input.mousePosition;
@@ -94,7 +94,7 @@ public class BenPlayerTest : NetworkBehaviour
             float rotZ = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
             Quaternion spawnRot = Quaternion.Euler(0f, 0f, rotZ + 90f);
 
-            Vector3 spawnPos = transform.position - (spawnRot * Vector3.up) * 0.7f;
+            Vector3 spawnPos = transform.position - spawnRot * Vector3.up * 0.9f;
 
             if (IsServer)
             {
@@ -125,7 +125,7 @@ public class BenPlayerTest : NetworkBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && canFire)
+        if (Input.GetMouseButton(0) && canFire)
         {
             Quaternion spawnRot = transform.rotation;
             Vector3 spawnPos = transform.position;
