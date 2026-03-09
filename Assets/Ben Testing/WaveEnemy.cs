@@ -24,15 +24,16 @@ public class WaveEnemy : NetworkBehaviour
             }
 
             if (enemyHealth.Value <= 0)
-                {
-                    KillEnemy();
-                }
+            {
+                Debug.Log("Enemy killed!");
+                KillEnemy();
+            }
         }
     }
 
     void KillEnemy()
     {
-        if(!IsClient && IsServer)
+        if(!IsClient)
         {
             Destroy(gameObject);
         }
