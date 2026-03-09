@@ -24,9 +24,29 @@ public class WaveEnemy : NetworkBehaviour
 
                 if (enemyHealth.Value <= 0)
                 {
-                    Destroy(gameObject);
+                    KillEnemy();
+                    // Destroy(gameObject);
                 }
             }
         }
+    }
+
+    void KillEnemy()
+    {
+        if(IsServer)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            RequestScoreServerRpc();
+        }
+    }
+
+    [ServerRpc]
+    private void RequestScoreServerRpc(ServerRpcParams rpcParams = default)
+    {
+        // Only server executes this code
+        Destroy(gameObject);
     }
 }
