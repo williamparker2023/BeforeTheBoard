@@ -41,7 +41,15 @@ public class BenPlayerTest : NetworkBehaviour
     void Start()
     {        
         if (!IsOwner) return;
-        SetPlayerName("Player " + OwnerClientId);
+        
+        if(IsServer)
+        {
+            SetPlayerName("Player " + OwnerClientId);
+        }
+        else
+        {
+            RequestSetPlayerNameServerRpc("Player " + OwnerClientId);
+        }
 
         rb = GetComponent<Rigidbody2D>();
         GetComponent<SpriteRenderer>().color = Color.green;

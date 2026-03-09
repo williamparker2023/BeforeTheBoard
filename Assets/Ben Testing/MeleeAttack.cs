@@ -17,7 +17,7 @@ public class MeleeAttack : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {        
-        if (!IsClient && !IsServer)
+        if (IsClient && !IsServer)
         {
             RequestDestroyServerRpc();
         }
