@@ -6,7 +6,7 @@ using Unity.Netcode.Components;
 [RequireComponent(typeof(NetworkTransform))]
 public class MeleeAttack : NetworkBehaviour
 {
-    [SerializeField] float damage = 0.5f;
+    [SerializeField] public float damage = 0.5f;
     [SerializeField] float LIFETIME = 0.1f;
     // private Vector3 mousePos;
     private Vector3 mousePos;
