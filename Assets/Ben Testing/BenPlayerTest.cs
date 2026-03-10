@@ -180,10 +180,24 @@ public class BenPlayerTest : NetworkBehaviour
         {
             playerHealth.Value = 0;
             Debug.Log("Player " + OwnerClientId + " has died.");
+            gameObject.SetActive(false);
         }
     }
 
-    [ServerRpc]
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!IsServer) return;
+
+        if (collision.gameObject.CompareTag("EnemyRange"))
+        {
+            TakeDamage(collision.gameObject.GetComponent<EnemyProjectileCode>().damage);
+            collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            Debug.Log("Player hit! Current health: " + playerHealth.Value);
+            Destroy(collision.gameObject);
+        }
+    }
+
+  [ServerRpc]
     private void RequestSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
     {
         GameObject spawnedObject = Instantiate(bullet, spawnPos, spawnRot);
