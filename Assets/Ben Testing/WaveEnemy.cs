@@ -3,6 +3,7 @@ using UnityEngine;
 using Unity.Netcode.Components;
 
 [RequireComponent(typeof(NetworkTransform))]
+[RequireComponent(typeof(NetworkObject))]
 public class WaveEnemy : NetworkBehaviour
 {
     [SerializeField] bool meleeType = true; //false = projectile
@@ -33,9 +34,13 @@ public class WaveEnemy : NetworkBehaviour
     private void KillEnemy()
     {
         if (!IsServer) return;
-
         NetworkObject.Despawn(false);
+    }
+
+    public override void OnNetworkDespawn()
+    {
         gameObject.SetActive(false);
+        base.OnNetworkDespawn();
     }
 
 }
