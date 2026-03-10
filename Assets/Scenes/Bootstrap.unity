@@ -1713,14 +1713,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveEnemy
   ShowTopMostFoldoutHeaderGroup: 1
-  meleeType: 1
+  meleeType: 0
   classType: 0
   enemyHealth:
     m_InternalValue: 10
   projectilePrefab: {fileID: 8316176547245110427, guid: 44403a2245c2a4fe0a1eef48c80fb72d, type: 3}
   canFire: 0
   timer: 0
-  TIME_BETWEEN_SHOTS: 3
+  TIME_BETWEEN_SHOTS: 0.6
 --- !u!114 &829665928
 MonoBehaviour:
   m_ObjectHideFlags: 0

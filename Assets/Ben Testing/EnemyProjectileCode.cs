@@ -30,7 +30,17 @@ public class EnemyProjectileCode : NetworkBehaviour
         rb.linearVelocity = transform.up * force;
     }
 
-    [ServerRpc]
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!IsServer) return;
+        
+        if (collision.gameObject.CompareTag("PlayerAttack"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+  [ServerRpc]
     private void RequestDestroyServerRpc(ServerRpcParams rpcParams = default)
     {
         // Only server executes this code
