@@ -46,4 +46,10 @@ public class ProjectileTest : NetworkBehaviour
         // Only server executes this code
         Destroy(gameObject, LIFETIME);
     }
+
+    public override void OnNetworkDespawn()
+    {
+        gameObject.SetActive(false);
+        base.OnNetworkDespawn();
+    }
 }
