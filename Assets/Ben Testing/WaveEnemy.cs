@@ -13,39 +13,29 @@ public class WaveEnemy : NetworkBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!IsServer) return;
+
         if (collision.gameObject.CompareTag("PlayerAttack"))
         {
             // Only server executes this code
-            if (IsServer)
-            {
-                enemyHealth.Value -= collision.gameObject.GetComponent<ProjectileTest>().damage;
-                Destroy(collision.gameObject);
-                Debug.Log("Enemy hit! Current health: " + enemyHealth.Value);
-            }
+            enemyHealth.Value -= collision.gameObject.GetComponent<ProjectileTest>().damage;
+            collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            Debug.Log("Enemy hit! Current health: " + enemyHealth.Value);
+
 
             if (enemyHealth.Value <= 0)
-                {
-                    KillEnemy();
-                }
+            {
+                KillEnemy();
+            }
         }
     }
 
-    void KillEnemy()
+    private void KillEnemy()
     {
-        if(!IsClient && IsServer)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            RequestScoreServerRpc();
-        }
+        if (!IsServer) return;
+
+        NetworkObject.Despawn(false);
+        gameObject.SetActive(false);
     }
 
-    [ServerRpc]
-    private void RequestScoreServerRpc(ServerRpcParams rpcParams = default)
-    {
-        // Only server executes this code
-        Destroy(gameObject);
-    }
 }
