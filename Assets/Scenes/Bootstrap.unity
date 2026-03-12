@@ -1721,6 +1721,9 @@ MonoBehaviour:
   canFire: 0
   timer: 0
   TIME_BETWEEN_SHOTS: 0.6
+  SPEED: 4
+  WORLD_LIMIT: 4.5
+  MOVE_NOISE: 5
 --- !u!114 &829665928
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -181,8 +181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileTest
   ShowTopMostFoldoutHeaderGroup: 1
+  damage: 0.5
   LIFETIME: 5
-  force: 8
+  force: 10
 --- !u!50 &-7179697211340485616
 Rigidbody2D:
   serializedVersion: 5

@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using Unity.Netcode.Components;
+using System.Collections;
 
 [RequireComponent(typeof(NetworkTransform))]
 [RequireComponent(typeof(NetworkObject))]
@@ -17,6 +18,12 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] private float timer;
     [SerializeField] float TIME_BETWEEN_SHOTS = 3.0f;
 
+    //======== MOVEMENT
+    [SerializeField] float SPEED = 5.0f;
+    [SerializeField] float WORLD_LIMIT = 4.5f;
+    [SerializeField] float MOVE_NOISE = 0.5f;
+    [SerializeField] float TIME_BETWEEN_MOVE_CHANGES = 3.0f;
+
     void Update()
     {
         if (!IsServer) return;
@@ -28,6 +35,7 @@ public class WaveEnemy : NetworkBehaviour
         else
         {
             Shoot();
+            StartCoroutine(RangeMovement(TIME_BETWEEN_MOVE_CHANGES));
         }
     }
 
@@ -60,6 +68,33 @@ public class WaveEnemy : NetworkBehaviour
     {
         gameObject.SetActive(false);
         base.OnNetworkDespawn();
+    }
+
+    IEnumerator RangeMovement(float delayTime)
+    {
+        Transform nearestPlayer = GetClosestPlayer();
+        float randomNoise = Random.Range(-MOVE_NOISE, MOVE_NOISE);
+
+        Vector2 targetPosition = new Vector2(transform.position.x, -nearestPlayer.position.y + randomNoise);
+        
+        float moveSpeed = SPEED * Time.deltaTime;
+
+        yield return new WaitForSeconds(delayTime);
+
+        if(transform.position.y > -WORLD_LIMIT && transform.position.y < WORLD_LIMIT)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        }
+        else if(transform.position.y < -WORLD_LIMIT)
+        {
+            targetPosition = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        }
+        else if (transform.position.y > WORLD_LIMIT)
+        {
+            targetPosition = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
+            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        }
     }
 
     void Shoot()

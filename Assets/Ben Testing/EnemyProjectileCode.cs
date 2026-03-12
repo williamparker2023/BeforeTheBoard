@@ -34,11 +34,13 @@ public class EnemyProjectileCode : NetworkBehaviour
     {
         if (!IsServer) return;
 
+        /*
         if (collision.gameObject.CompareTag("PlayerAttack"))
         {
             Destroy(collision.gameObject);
             Destroy(gameObject);
         }
+        */
     }
 
   [ServerRpc]
