@@ -23,6 +23,7 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] float WORLD_LIMIT = 4.5f;
     [SerializeField] float MOVE_NOISE = 0.5f;
     [SerializeField] float TIME_BETWEEN_MOVE_CHANGES = 3.0f;
+    private bool isMoving = false;
 
     void Update()
     {
@@ -35,7 +36,10 @@ public class WaveEnemy : NetworkBehaviour
         else
         {
             Shoot();
-            StartCoroutine(RangeMovement(TIME_BETWEEN_MOVE_CHANGES));
+            if (!isMoving)
+            {
+                StartCoroutine(RangeMovement());
+            }
         }
     }
 
@@ -70,16 +74,17 @@ public class WaveEnemy : NetworkBehaviour
         base.OnNetworkDespawn();
     }
 
-    IEnumerator RangeMovement(float delayTime)
+    IEnumerator RangeMovement()
     {
+        isMoving = true;
+
+        yield return new WaitForSeconds(TIME_BETWEEN_MOVE_CHANGES);
+
         Transform nearestPlayer = GetClosestPlayer();
         float randomNoise = Random.Range(-MOVE_NOISE, MOVE_NOISE);
-
         Vector2 targetPosition = new Vector2(transform.position.x, -nearestPlayer.position.y + randomNoise);
         
         float moveSpeed = SPEED * Time.deltaTime;
-
-        yield return new WaitForSeconds(delayTime);
 
         if(transform.position.y > -WORLD_LIMIT && transform.position.y < WORLD_LIMIT)
         {
@@ -95,6 +100,7 @@ public class WaveEnemy : NetworkBehaviour
             targetPosition = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
             transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
         }
+        isMoving = false;
     }
 
     void Shoot()
