@@ -2,11 +2,17 @@ using Unity.Netcode;
 using UnityEngine;
 using Unity.Netcode.Components;
 using System.Collections;
+using Unity.Services.Lobbies.Models;
+// using System.Numerics;
 
 [RequireComponent(typeof(NetworkTransform))]
 [RequireComponent(typeof(NetworkObject))]
 public class WaveEnemy : NetworkBehaviour
 {
+    //======= VARIABLES TO RANDOMIZE
+    [SerializeField] bool isAggressive = true; //If true, then timid
+
+
     [SerializeField] bool meleeType = true; //false = projectile
     [SerializeField] int classType = 0; // 0 = dps (high damage/speed, low health), 1 = tank (low damage/speed, high health)
 
@@ -20,10 +26,13 @@ public class WaveEnemy : NetworkBehaviour
 
     //======== MOVEMENT
     [SerializeField] float SPEED = 5.0f;
-    [SerializeField] float WORLD_LIMIT = 4.5f;
-    [SerializeField] float MOVE_NOISE = 0.5f;
-    [SerializeField] float TIME_BETWEEN_MOVE_CHANGES = 3.0f;
-    private bool isMoving = false;
+    [SerializeField] float WORLD_LIMIT = 4.0f; // The Y limit where the enemy will stop moving (prevents it from leaving the game space)
+    [SerializeField] float WORLD_X_LIMIT = 8.0f; // The X limit where the enemy will stop moving (prevents it from leaving the game space)
+
+    // Ranged Movement
+    [SerializeField] float STOP_DISTANCE = 5.0f; // distance the enemy stops moving towards the player (aggressive)
+    [SerializeField] float RETREAT_DISTANCE = 3.0f; // distance the enemy will start retreating if the player approaches
+    [SerializeField] float TIMID_DISTANCE = 6.0f; // distance a timid enemy will try to maintain from the player
 
     void Update()
     {
@@ -36,10 +45,11 @@ public class WaveEnemy : NetworkBehaviour
         else
         {
             Shoot();
-            if (!isMoving)
-            {
-                StartCoroutine(RangeMovement());
-            }
+            RangeMovement();
+            // if (!isMoving)
+            // {
+                // StartCoroutine(RangeMovement());
+            // }
         }
     }
 
@@ -74,33 +84,91 @@ public class WaveEnemy : NetworkBehaviour
         base.OnNetworkDespawn();
     }
 
-    IEnumerator RangeMovement()
+    void RangeMovement()
     {
-        isMoving = true;
-
-        yield return new WaitForSeconds(TIME_BETWEEN_MOVE_CHANGES);
-
         Transform nearestPlayer = GetClosestPlayer();
-        float randomNoise = Random.Range(-MOVE_NOISE, MOVE_NOISE);
-        Vector2 targetPosition = new Vector2(transform.position.x, -nearestPlayer.position.y + randomNoise);
-        
-        float moveSpeed = SPEED * Time.deltaTime;
 
-        if(transform.position.y > -WORLD_LIMIT && transform.position.y < WORLD_LIMIT)
+        // Making sure the enemy isnt out of bounds
+        if (transform.position.y < -WORLD_LIMIT)
         {
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
-        }
-        else if(transform.position.y < -WORLD_LIMIT)
-        {
-            targetPosition = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+            transform.position = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
+            Debug.Log("Out of bounds!");
+            return;
         }
         else if (transform.position.y > WORLD_LIMIT)
         {
-            targetPosition = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+            transform.position = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
+            Debug.Log("Out of bounds!");
+            return;
         }
-        isMoving = false;
+        if(transform.position.x < -WORLD_X_LIMIT)
+        {
+            transform.position = new Vector2(-WORLD_X_LIMIT + 0.1f, transform.position.y);
+            Debug.Log("Out of bounds!");
+            return;
+        }
+        else if (transform.position.x > WORLD_X_LIMIT)
+        {
+            transform.position = new Vector2(WORLD_X_LIMIT - 0.1f, transform.position.y);
+            Debug.Log("Out of bounds!");
+            return;
+        }
+
+        // Making sure the enemy isnt in another enemy. If it is, move a little bit away from the closest enemy
+        if (Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < 0.1f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, GetClosestEnemy().transform.position, -SPEED * Time.deltaTime);
+            Debug.Log("lwk stunlocked probably");
+            return;
+        }
+
+        if (isAggressive) //Aggressive: Keep a relative distance from the nearest player (STOP_DISTANCE / RETREAT DISTANCE)
+        {
+            if(Vector2.Distance(transform.position, nearestPlayer.position) > STOP_DISTANCE)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, SPEED * Time.deltaTime);
+            }
+            else if(Vector2.Distance(transform.position, nearestPlayer.position) < STOP_DISTANCE && Vector2.Distance(transform.position, nearestPlayer.position) > RETREAT_DISTANCE)
+            {
+                transform.position = this.transform.position;
+            }
+            else if(Vector2.Distance(transform.position, nearestPlayer.position) < RETREAT_DISTANCE)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, -SPEED * Time.deltaTime);
+            }
+        } else //Timid: Stay as far from players as possible (TIMID_DISTANCE)
+        {
+            if(Vector2.Distance(transform.position, nearestPlayer.position) < TIMID_DISTANCE)
+            {
+                transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, -SPEED * Time.deltaTime);
+            }
+            else
+            {
+                transform.position = this.transform.position;
+            }
+        }
+        Debug.Log("Got to end of movement without nmoving.. huh");
+        // float randomNoise = Random.Range(-MOVE_NOISE, MOVE_NOISE);
+        // Vector2 targetPosition = new Vector2(transform.position.x, -nearestPlayer.position.y + randomNoise);
+        
+        // float moveSpeed = SPEED * Time.deltaTime;
+
+        // if(transform.position.y > -WORLD_LIMIT && transform.position.y < WORLD_LIMIT)
+        // {
+        //     transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        // }
+        // else if(transform.position.y < -WORLD_LIMIT)
+        // {
+        //     targetPosition = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
+        //     transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        // }
+        // else if (transform.position.y > WORLD_LIMIT)
+        // {
+        //     targetPosition = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
+        //     transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
+        // }
+
+        // isMoving = false;
     }
 
     void Shoot()
@@ -166,7 +234,29 @@ public class WaveEnemy : NetworkBehaviour
                 }
             }
         }
-        Debug.Log("Closest player: " + closestPlayer.name);
+        // Debug.Log("Closest player: " + closestPlayer.name);
         return closestPlayer;
+    }
+
+    public GameObject GetClosestEnemy()
+    {
+        GameObject[] gameObjectsWithTag = GameObject.FindGameObjectsWithTag("WaveEnemy");
+        GameObject closestObject = null;
+        float minDistanceSqr = Mathf.Infinity;
+        Vector3 currentPosition = transform.position;
+
+        foreach (GameObject obj in gameObjectsWithTag)
+        {
+            Vector3 directionToTarget = obj.transform.position - currentPosition;
+            float distanceSqr = directionToTarget.sqrMagnitude;
+
+            if (distanceSqr < minDistanceSqr && obj != gameObject) //making sure that the closest enemy isnt itself, lol
+            {
+                minDistanceSqr = distanceSqr;
+                closestObject = obj;
+            }
+        }
+
+        return closestObject;
     }
 }
