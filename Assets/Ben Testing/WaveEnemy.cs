@@ -121,7 +121,7 @@ public class WaveEnemy : NetworkBehaviour
         }
 
         // Making sure the enemy isnt in another enemy. If it is, move a little bit away from the closest enemy
-        if (Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < 0.1f)
+        if (GetClosestEnemy() != null && Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < 0.1f)
         {
             transform.position = Vector2.MoveTowards(transform.position, GetClosestEnemy().transform.position, -SPEED * Time.deltaTime);
             Debug.Log("lwk stunlocked probably");
