@@ -223,10 +223,6 @@ public class WaveEnemy : NetworkBehaviour
                     closestPlayer = playerClient.PlayerObject.transform;
                 }
             }
-            else //If there arent any players left
-            {
-                return null;
-            }
         }
         // Debug.Log("Closest player: " + closestPlayer.name);
         return closestPlayer;
