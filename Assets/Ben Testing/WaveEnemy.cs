@@ -87,6 +87,12 @@ public class WaveEnemy : NetworkBehaviour
     void RangeMovement()
     {
         Transform nearestPlayer = GetClosestPlayer();
+        if (nearestPlayer == null)
+        {
+            return; // No players left, so don't move
+        }
+
+        if(!IsServer) return;
 
         // Making sure the enemy isnt out of bounds
         if (transform.position.y < -WORLD_LIMIT)
@@ -147,28 +153,7 @@ public class WaveEnemy : NetworkBehaviour
                 transform.position = this.transform.position;
             }
         }
-        Debug.Log("Got to end of movement without nmoving.. huh");
-        // float randomNoise = Random.Range(-MOVE_NOISE, MOVE_NOISE);
-        // Vector2 targetPosition = new Vector2(transform.position.x, -nearestPlayer.position.y + randomNoise);
-        
-        // float moveSpeed = SPEED * Time.deltaTime;
-
-        // if(transform.position.y > -WORLD_LIMIT && transform.position.y < WORLD_LIMIT)
-        // {
-        //     transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
-        // }
-        // else if(transform.position.y < -WORLD_LIMIT)
-        // {
-        //     targetPosition = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
-        //     transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
-        // }
-        // else if (transform.position.y > WORLD_LIMIT)
-        // {
-        //     targetPosition = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
-        //     transform.position = Vector2.MoveTowards(transform.position, targetPosition, moveSpeed);
-        // }
-
-        // isMoving = false;
+        Debug.Log("Got to end of movement without moving.. huh");
     }
 
     void Shoot()
@@ -186,6 +171,11 @@ public class WaveEnemy : NetworkBehaviour
         if(canFire)
         {
             Transform closestPlayer = GetClosestPlayer();
+            if (closestPlayer == null)
+            {
+                return; // No players left, so don't move
+            }
+
             Vector2 direction = closestPlayer.position - transform.position;
         
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -232,6 +222,10 @@ public class WaveEnemy : NetworkBehaviour
                     minDistance = distance;
                     closestPlayer = playerClient.PlayerObject.transform;
                 }
+            }
+            else //If there arent any players left
+            {
+                return null;
             }
         }
         // Debug.Log("Closest player: " + closestPlayer.name);
