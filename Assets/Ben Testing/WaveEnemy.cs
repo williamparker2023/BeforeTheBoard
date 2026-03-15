@@ -98,25 +98,25 @@ public class WaveEnemy : NetworkBehaviour
         if (transform.position.y < -WORLD_LIMIT)
         {
             transform.position = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
-            Debug.Log("Out of bounds!");
+            // Debug.Log("Out of bounds!");
             return;
         }
         else if (transform.position.y > WORLD_LIMIT)
         {
             transform.position = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
-            Debug.Log("Out of bounds!");
+            // Debug.Log("Out of bounds!");
             return;
         }
         if(transform.position.x < -WORLD_X_LIMIT)
         {
             transform.position = new Vector2(-WORLD_X_LIMIT + 0.1f, transform.position.y);
-            Debug.Log("Out of bounds!");
+            // Debug.Log("Out of bounds!");
             return;
         }
         else if (transform.position.x > WORLD_X_LIMIT)
         {
             transform.position = new Vector2(WORLD_X_LIMIT - 0.1f, transform.position.y);
-            Debug.Log("Out of bounds!");
+            // Debug.Log("Out of bounds!");
             return;
         }
 
@@ -124,7 +124,7 @@ public class WaveEnemy : NetworkBehaviour
         if (GetClosestEnemy() != null && Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < 0.1f)
         {
             transform.position = Vector2.MoveTowards(transform.position, GetClosestEnemy().transform.position, -SPEED * Time.deltaTime);
-            Debug.Log("lwk stunlocked probably");
+            // Debug.Log("lwk stunlocked probably");
             return;
         }
 
@@ -153,7 +153,7 @@ public class WaveEnemy : NetworkBehaviour
                 transform.position = this.transform.position;
             }
         }
-        Debug.Log("Got to end of movement without moving.. huh");
+        // Debug.Log("Got to end of movement without moving.. huh");
     }
 
     void Shoot()
