@@ -3,6 +3,7 @@ using UnityEngine;
 using Unity.Netcode.Components;
 using System.Collections;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 // using System.Numerics;
 
 [RequireComponent(typeof(NetworkTransform))]
@@ -19,6 +20,7 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] public NetworkVariable<float> enemyHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     //======== SHOOTING
+    [SerializeField] public float rangeDamage = 0.5f;
     [SerializeField] GameObject projectilePrefab;
     public bool canFire;
     [SerializeField] private float timer;
@@ -185,6 +187,8 @@ public class WaveEnemy : NetworkBehaviour
             {
                 var instance = Instantiate(projectilePrefab, transform.position, targetRotation);
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                EnemyProjectileCode projScript = instance.GetComponent<EnemyProjectileCode>(); //Set damage on the projectile
+                projScript.Initialize(rangeDamage);
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
             else if (IsClient)
@@ -201,6 +205,10 @@ public class WaveEnemy : NetworkBehaviour
     {
         var instance = Instantiate(projectilePrefab, position, rotation);
         var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+
+        EnemyProjectileCode projScript = instance.GetComponent<EnemyProjectileCode>(); //Set damage on the projectile
+        projScript.Initialize(rangeDamage);
+
         instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
     }
 

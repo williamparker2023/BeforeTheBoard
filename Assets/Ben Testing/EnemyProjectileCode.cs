@@ -13,6 +13,12 @@ public class EnemyProjectileCode : NetworkBehaviour
     private Rigidbody2D rb;
     public float force;
 
+     public void Initialize(float dmg)
+    {
+        damage = dmg;
+    }
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -43,7 +49,7 @@ public class EnemyProjectileCode : NetworkBehaviour
         */
     }
 
-  [ServerRpc]
+    [ServerRpc]
     private void RequestDestroyServerRpc(ServerRpcParams rpcParams = default)
     {
         // Only server executes this code

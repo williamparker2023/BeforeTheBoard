@@ -13,6 +13,11 @@ public class MeleeAttack : NetworkBehaviour
     private Camera mainCam;
     public float force;
 
+    public void Initialize(float dmg)
+    {
+        damage = dmg;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {        

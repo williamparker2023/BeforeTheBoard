@@ -23,12 +23,15 @@ public class BenPlayerTest : NetworkBehaviour
     private Vector3 mousePos;
 
     // ============== BISHOP Shooting ==============
+    [SerializeField] public float rangeDamage = 0.5f;
+
     public GameObject bullet;
     public bool canFire;
     [SerializeField] private float timer;
     [SerializeField] float TIME_BETWEEN_SHOTS = 3.0f;
 
     // ============== KNIGHT Melee ==============
+    [SerializeField] public float meleeDamage = 1.0f;
     public GameObject meleeHitbox;
     public bool canMelee;
     [SerializeField] private float meleeTimer;
@@ -126,6 +129,8 @@ public class BenPlayerTest : NetworkBehaviour
             {
                 var instance = Instantiate(meleeHitbox, spawnPos, spawnRot);
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                MeleeAttack meleeScript = instance.GetComponent<MeleeAttack>(); //Set damage on the melee hitbox
+                meleeScript.Initialize(meleeDamage);
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
             else if (IsClient)
@@ -160,6 +165,10 @@ public class BenPlayerTest : NetworkBehaviour
             {
                 var instance = Instantiate(bullet, spawnPos, spawnRot);
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                
+                ProjectileTest projScript = instance.GetComponent<ProjectileTest>(); //Set damage on the projectile
+                projScript.Initialize(rangeDamage);
+
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
             else if (IsClient)
