@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1967671
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -211,8 +211,6 @@ MonoBehaviour:
   SPEED: 4
   WORLD_LIMIT: 4
   WORLD_X_LIMIT: 7
-  MOVE_NOISE: 5
-  TIME_BETWEEN_MOVE_CHANGES: 3
   STOP_DISTANCE: 5
   RETREAT_DISTANCE: 3
   TIMID_DISTANCE: 6
@@ -249,9 +247,9 @@ MonoBehaviour:
   SyncRotAngleX: 0
   SyncRotAngleY: 0
   SyncRotAngleZ: 0
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -355,7 +353,7 @@ Transform:
   m_GameObject: {fileID: 1967670}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.13, y: 0.44, z: 0}
+  m_LocalPosition: {x: 7.8, y: 0.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -526,8 +524,6 @@ MonoBehaviour:
   SPEED: 4
   WORLD_LIMIT: 4
   WORLD_X_LIMIT: 7
-  MOVE_NOISE: 5
-  TIME_BETWEEN_MOVE_CHANGES: 3
   STOP_DISTANCE: 5
   RETREAT_DISTANCE: 3
   TIMID_DISTANCE: 6
@@ -564,9 +560,9 @@ MonoBehaviour:
   SyncRotAngleX: 0
   SyncRotAngleY: 0
   SyncRotAngleZ: 0
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -670,7 +666,7 @@ Transform:
   m_GameObject: {fileID: 43879112}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.53, y: 3.61, z: 0}
+  m_LocalPosition: {x: -6.53, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1977,7 +1973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &720011913
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2049,8 +2045,6 @@ MonoBehaviour:
   SPEED: 4
   WORLD_LIMIT: 4
   WORLD_X_LIMIT: 7
-  MOVE_NOISE: 5
-  TIME_BETWEEN_MOVE_CHANGES: 3
   STOP_DISTANCE: 5
   RETREAT_DISTANCE: 3
   TIMID_DISTANCE: 6
@@ -2087,9 +2081,9 @@ MonoBehaviour:
   SyncRotAngleX: 0
   SyncRotAngleY: 0
   SyncRotAngleZ: 0
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -2451,8 +2445,6 @@ MonoBehaviour:
   SPEED: 4
   WORLD_LIMIT: 4.5
   WORLD_X_LIMIT: 9
-  MOVE_NOISE: 5
-  TIME_BETWEEN_MOVE_CHANGES: 3
   STOP_DISTANCE: 5
   RETREAT_DISTANCE: 3
   TIMID_DISTANCE: 6
@@ -2489,9 +2481,9 @@ MonoBehaviour:
   SyncRotAngleX: 0
   SyncRotAngleY: 0
   SyncRotAngleZ: 0
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -3330,7 +3322,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1791571715
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3402,8 +3394,6 @@ MonoBehaviour:
   SPEED: 4
   WORLD_LIMIT: 4
   WORLD_X_LIMIT: 7
-  MOVE_NOISE: 5
-  TIME_BETWEEN_MOVE_CHANGES: 3
   STOP_DISTANCE: 5
   RETREAT_DISTANCE: 3
   TIMID_DISTANCE: 6
@@ -3440,9 +3430,9 @@ MonoBehaviour:
   SyncRotAngleX: 0
   SyncRotAngleY: 0
   SyncRotAngleZ: 0
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -3572,7 +3562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!61 &1795825075
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3644,8 +3634,6 @@ MonoBehaviour:
   SPEED: 4
   WORLD_LIMIT: 4
   WORLD_X_LIMIT: 7
-  MOVE_NOISE: 5
-  TIME_BETWEEN_MOVE_CHANGES: 3
   STOP_DISTANCE: 5
   RETREAT_DISTANCE: 3
   TIMID_DISTANCE: 6
@@ -3682,9 +3670,9 @@ MonoBehaviour:
   SyncRotAngleX: 0
   SyncRotAngleY: 0
   SyncRotAngleZ: 0
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
   PositionThreshold: 0.001
   RotAngleThreshold: 0.01
   ScaleThreshold: 0.01
@@ -3788,7 +3776,7 @@ Transform:
   m_GameObject: {fileID: 1795825074}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.41, y: -1.44, z: 0}
+  m_LocalPosition: {x: 6.41, y: -2.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

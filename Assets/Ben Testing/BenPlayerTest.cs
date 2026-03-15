@@ -180,7 +180,8 @@ public class BenPlayerTest : NetworkBehaviour
         {
             playerHealth.Value = 0;
             Debug.Log("Player " + OwnerClientId + " has died.");
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
+            NetworkObject.Despawn(true);
         }
     }
 
@@ -197,7 +198,13 @@ public class BenPlayerTest : NetworkBehaviour
         }
     }
 
-  [ServerRpc]
+    public override void OnNetworkDespawn()
+    {
+        gameObject.SetActive(false);
+        base.OnNetworkDespawn();
+    }
+
+    [ServerRpc]
     private void RequestSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
     {
         GameObject spawnedObject = Instantiate(bullet, spawnPos, spawnRot);

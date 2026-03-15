@@ -62,7 +62,7 @@ public class WaveEnemy : NetworkBehaviour
             // Only server executes this code
             enemyHealth.Value -= collision.gameObject.GetComponent<ProjectileTest>().damage;
             collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
-            Debug.Log("Enemy hit! Current health: " + enemyHealth.Value);
+            // Debug.Log("Enemy hit! Current health: " + enemyHealth.Value);
 
 
             if (enemyHealth.Value <= 0)
@@ -75,7 +75,7 @@ public class WaveEnemy : NetworkBehaviour
     private void KillEnemy()
     {
         if (!IsServer) return;
-        NetworkObject.Despawn(false);
+        NetworkObject.Despawn(true);
     }
 
     public override void OnNetworkDespawn()
