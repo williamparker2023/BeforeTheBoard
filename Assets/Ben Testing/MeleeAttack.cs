@@ -16,7 +16,9 @@ public class MeleeAttack : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {        
-        if (IsClient && !IsServer)
+        if(!IsOwner) return;
+
+        if (IsClient)
         {
             RequestDestroyServerRpc();
         }
@@ -32,5 +34,11 @@ public class MeleeAttack : NetworkBehaviour
     {
         // Only server executes this code
         Destroy(gameObject, LIFETIME);
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        gameObject.SetActive(false);
+        base.OnNetworkDespawn();
     }
 }

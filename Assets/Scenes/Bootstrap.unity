@@ -281,7 +281,7 @@ MonoBehaviour:
   canFire: 0
   timer: 0
   TIME_BETWEEN_SHOTS: 0.6
-  SPEED: 4
+  SPEED: 2
   WORLD_LIMIT: 4
   WORLD_X_LIMIT: 7
   STOP_DISTANCE: 5
@@ -1962,7 +1962,7 @@ MonoBehaviour:
   canFire: 0
   timer: 0
   TIME_BETWEEN_SHOTS: 0.6
-  SPEED: 4
+  SPEED: 2
   WORLD_LIMIT: 4.5
   WORLD_X_LIMIT: 9
   STOP_DISTANCE: 5
