@@ -8,6 +8,8 @@ public class BootstrapPlayerSpawner : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log($"BootstrapPlayerSpawner OnNetworkSpawn | IsServer={IsServer} | IsClient={IsClient}");
+
         if (!IsServer) return;
 
         SpawnAllPlayers();
@@ -26,9 +28,20 @@ public class BootstrapPlayerSpawner : NetworkBehaviour
                 spawnPos = spawnPoints[index % spawnPoints.Length].position;
             }
 
+            Debug.Log($"Spawning player for client {clientId} at {spawnPos}");
+
             GameObject player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+
             NetworkObject netObj = player.GetComponent<NetworkObject>();
+            if (netObj == null)
+            {
+                Debug.LogError("Spawned player prefab has no NetworkObject!");
+                return;
+            }
+
             netObj.SpawnAsPlayerObject(clientId, true);
+
+            Debug.Log($"Spawned player object: {player.name} | Owner={clientId}");
 
             index++;
         }
