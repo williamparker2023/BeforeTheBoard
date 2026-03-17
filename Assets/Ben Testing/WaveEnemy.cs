@@ -43,7 +43,7 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] public float meleeDamage = 1.0f;
     public bool canMelee;
     [SerializeField] float TIME_BETWEEN_HITS = 2.0f;
-    [SerializeField] float DISTANCE_TO_HIT = 1.0f;
+    [SerializeField] float DISTANCE_TO_HIT = 2.0f; //distance the enemy needs to be within to the player to  melee hit
 
 
     void Awake()
