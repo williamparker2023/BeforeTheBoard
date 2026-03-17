@@ -39,7 +39,11 @@ public class WaveEnemy : NetworkBehaviour
 
     // ======= MELEE
     [Header("Melee Attack Variables")]
+    [SerializeField] GameObject meleePrefab;
     [SerializeField] public float meleeDamage = 1.0f;
+    public bool canMelee;
+    [SerializeField] float TIME_BETWEEN_HITS = 2.0f;
+    [SerializeField] float DISTANCE_TO_HIT = 1.0f;
 
 
     void Awake()
@@ -75,16 +79,13 @@ public class WaveEnemy : NetworkBehaviour
 
         if (meleeType)
         {
+            MeleeAttack();
             MeleeMovement();
         }
         else
         {
             Shoot();
             RangeMovement();
-            // if (!isMoving)
-            // {
-                // StartCoroutine(RangeMovement());
-            // }
         }
     }
 
@@ -278,6 +279,52 @@ public class WaveEnemy : NetworkBehaviour
             canFire = false;
         }
 
+    }
+
+    void MeleeAttack()
+    {
+        if (!canMelee)
+        {
+            timer += Time.deltaTime;
+            if (timer >= TIME_BETWEEN_HITS)
+            {
+                canMelee = true;
+                timer = 0.0f;
+            }
+        }
+
+        if(canMelee)
+        {
+            
+            Transform closestPlayer = GetClosestPlayer();
+            if (closestPlayer == null)
+            {
+                return; // No players left, so don't move
+            }
+
+            if (Vector2.Distance(transform.position, closestPlayer.position) < DISTANCE_TO_HIT)
+            {
+                Vector2 direction = closestPlayer.position - transform.position;
+            
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle-90));
+
+                if (IsServer)
+                {
+                    var instance = Instantiate(meleePrefab, transform.position, targetRotation);
+                    var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                    EnemyMeleeCode projScript = instance.GetComponent<EnemyMeleeCode>(); //Set damage on the projectile
+                    projScript.Initialize(meleeDamage);
+                    instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
+                }
+                else if (IsClient)
+                {
+                    RequestShootServerRpc(transform.position, targetRotation);
+                }
+                canMelee = false;
+
+            }
+        }
     }
 
     [ServerRpc]
