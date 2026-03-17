@@ -4,10 +4,14 @@ using Unity.Netcode.Components;
 
 public class GameManager : NetworkBehaviour
 {
+    [Header("SpawnLocations")]
+    [SerializeField] public BoxCollider2D rightSideSpawn;
+    [SerializeField] public GameObject enemyPrefab;
+
     [Header("Player Info")]
     //Player experience, for leveling up
     [SerializeField] public NetworkVariable<int> playerXP = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    [SerializeField] public NetworkVariable<int> XPNeeded = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] public NetworkVariable<int> XPNeeded = new NetworkVariable<int>(100, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] public NetworkVariable<int> playerLevel = new NetworkVariable<int>(1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private int XP_NEEDED_PER_LEVEL = 100;
 
@@ -23,7 +27,6 @@ public class GameManager : NetworkBehaviour
 
         if (!gameRunning.Value) return;
         //============IF THE GAME IS RUNNING============
-
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("WaveEnemy");
         int enemyNum = 0;
         if(enemies != null)
@@ -70,10 +73,38 @@ public class GameManager : NetworkBehaviour
         else //if a normal wave enemies wave
         {
             //============SPAWN WAVE ENEMIES============
-            //Randomize enemy type
             //Randomize number of enemies based on wave number & player count
+            int numOfEnemies = waveNum + (waveNum/2);
+
             //randomize spawn direction of enemies
-            //
+            Vector2 colliderWorldCenter = (Vector2)rightSideSpawn.transform.position + rightSideSpawn.offset;
+
+            float width, height, randomPosX, randomPosY;
+
+            //Spawn Enemies
+            for(int i = 0; i < numOfEnemies; i++)
+            {
+                // Calculate bounds taking into account the scale of the object
+                width = rightSideSpawn.size.x * rightSideSpawn.transform.lossyScale.x;
+                height = rightSideSpawn.size.y * rightSideSpawn.transform.lossyScale.y;
+
+                randomPosX = Random.Range(colliderWorldCenter.x - width / 2f, colliderWorldCenter.x + width / 2f);
+                randomPosY = Random.Range(colliderWorldCenter.y - height / 2f, colliderWorldCenter.y + height / 2f);
+                Vector2 randomPos = new Vector2 (randomPosX, randomPosY);
+                
+                var instance = Instantiate(enemyPrefab, randomPos, Quaternion.identity);
+
+                if(IsServer)
+                {
+                    var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                    instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
+
+                }
+                else if (IsClient)
+                {
+                    RequestSpawnServerRpc(randomPos, Quaternion.identity);
+                }
+            }
         }
     }
 
@@ -81,19 +112,28 @@ public class GameManager : NetworkBehaviour
     {
         Debug.Log("Players leveled up to level " + playerLevel.Value + "!");
         //Spawn level up GUI
-        while(true)
-        {
+        // while(true)
+        // {
                 //Wait for player input to choose a level up option
                 //Apply the chosen level up option to the player
                 //Break out of the loop once the player has made their choice
                 //Return false if issue
-        }
-        //gameRunning.Value = true;
+        // }
+        //Once all players level up...
+        gameRunning.Value = true;
     }
 
     void RevivePlayers()
     {
         Debug.Log("Reviving players for boss wave...");
         //Find all player objects and revive them to full health
+    }
+
+    [ServerRpc]
+    private void RequestSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
+    {
+        GameObject spawnedObject = Instantiate(enemyPrefab, spawnPos, spawnRot);
+        var netObj = spawnedObject.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
     }
 }

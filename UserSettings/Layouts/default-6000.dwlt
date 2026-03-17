@@ -640,9 +640,9 @@ MonoBehaviour:
       x: 0
       y: 21
       width: 947
-      height: 609
+      height: 514.5
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 473.5, y: 304.5}
+    m_Translation: {x: 473.5, y: 257.25}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
@@ -650,12 +650,12 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
       x: -473.5
-      y: -304.5
+      y: -257.25
       width: 947
-      height: 609
+      height: 514.5
     m_MinimalGUI: 1
-  m_defaultScale: 0.98645836
-  m_LastWindowPixelSize: {x: 947, y: 630}
+  m_defaultScale: 0.9527778
+  m_LastWindowPixelSize: {x: 947, y: 535.5}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 00000000000000000000
@@ -1236,7 +1236,7 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 2.524007, y: -0.17381361, z: -0.09663103}
+    m_Target: {x: -0.06763, y: 0.14415, z: 0}
     speed: 2
     m_Value: {x: 2.524007, y: -0.17381361, z: -0.09663103}
   m_RenderMode: 0
@@ -1288,7 +1288,7 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 10.37721
+    m_Target: 10
     speed: 2
     m_Value: 10.37721
   m_Ortho:
@@ -1373,7 +1373,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1397,7 +1397,7 @@ MonoBehaviour:
       m_Data: 57972
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 57662
+    - m_Data: 57914
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1430,7 +1430,7 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 57662
+    - m_Data: 57914
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

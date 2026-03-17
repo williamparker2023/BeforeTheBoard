@@ -8,6 +8,7 @@ TagManager:
   - EnemyMelee
   - EnemyRange
   - WaveEnemy
+  - BossEnemy
   layers:
   - Default
   - TransparentFX

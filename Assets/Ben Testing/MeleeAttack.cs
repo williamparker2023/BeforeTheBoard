@@ -9,8 +9,6 @@ public class MeleeAttack : NetworkBehaviour
     [SerializeField] public float damage = 1.0f;
     [SerializeField] float LIFETIME = 0.1f;
     // private Vector3 mousePos;
-    private Vector3 mousePos;
-    private Camera mainCam;
     public float force;
 
     public void Initialize(float dmg)
