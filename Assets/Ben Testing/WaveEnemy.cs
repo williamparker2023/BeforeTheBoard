@@ -30,11 +30,44 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] float SPEED = 5.0f;
     [SerializeField] float WORLD_LIMIT = 4.0f; // The Y limit where the enemy will stop moving (prevents it from leaving the game space)
     [SerializeField] float WORLD_X_LIMIT = 8.0f; // The X limit where the enemy will stop moving (prevents it from leaving the game space)
+    [SerializeField] float NEAREST_ENEMY_DISTANCE = 1.0f; // distance enemies will keep from eachother
 
     // Ranged Movement
     [SerializeField] float STOP_DISTANCE = 5.0f; // distance the enemy stops moving towards the player (aggressive)
     [SerializeField] float RETREAT_DISTANCE = 3.0f; // distance the enemy will start retreating if the player approaches
     [SerializeField] float TIMID_DISTANCE = 6.0f; // distance a timid enemy will try to maintain from the player
+
+    // ======= MELEE
+    [Header("Melee Attack Variables")]
+    [SerializeField] public float meleeDamage = 1.0f;
+
+
+    void Awake()
+    {
+        //Randomize between melee and ranged enemy
+        if (Random.value > 0.5f)
+        {
+            meleeType = true;
+            rangeDamage = 0.0f;
+        }
+        else
+        {
+            meleeType = false;
+        }
+
+        //Randomize between agressive and timid enemy
+        if (Random.value > 0.5f)
+        {
+            isAggressive = true;
+            GetComponent<SpriteRenderer>().color = Color.red;
+
+        }
+        else
+        {
+            isAggressive = false;
+            GetComponent<SpriteRenderer>().color = Color.orange;
+        }
+    }
 
     void Update()
     {
@@ -42,7 +75,7 @@ public class WaveEnemy : NetworkBehaviour
 
         if (meleeType)
         {
-            // Handle melee attack logic here
+            MeleeMovement();
         }
         else
         {
@@ -123,7 +156,7 @@ public class WaveEnemy : NetworkBehaviour
         }
 
         // Making sure the enemy isnt in another enemy. If it is, move a little bit away from the closest enemy
-        if (GetClosestEnemy() != null && Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < 0.1f)
+        if (GetClosestEnemy() != null && Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < NEAREST_ENEMY_DISTANCE)
         {
             transform.position = Vector2.MoveTowards(transform.position, GetClosestEnemy().transform.position, -SPEED * Time.deltaTime);
             // Debug.Log("lwk stunlocked probably");
@@ -158,6 +191,53 @@ public class WaveEnemy : NetworkBehaviour
         // Debug.Log("Got to end of movement without moving.. huh");
     }
 
+    void MeleeMovement()
+    {
+        Transform nearestPlayer = GetClosestPlayer();
+        if (nearestPlayer == null)
+        {
+            return; // No players left, so don't move
+        }
+
+        if(!IsServer) return;
+
+        // Making sure the enemy isnt out of bounds
+        if (transform.position.y < -WORLD_LIMIT)
+        {
+            transform.position = new Vector2(transform.position.x, -WORLD_LIMIT + 0.1f);
+            // Debug.Log("Out of bounds!");
+            return;
+        }
+        else if (transform.position.y > WORLD_LIMIT)
+        {
+            transform.position = new Vector2(transform.position.x, WORLD_LIMIT - 0.1f);
+            // Debug.Log("Out of bounds!");
+            return;
+        }
+        if(transform.position.x < -WORLD_X_LIMIT)
+        {
+            transform.position = new Vector2(-WORLD_X_LIMIT + 0.1f, transform.position.y);
+            // Debug.Log("Out of bounds!");
+            return;
+        }
+        else if (transform.position.x > WORLD_X_LIMIT)
+        {
+            transform.position = new Vector2(WORLD_X_LIMIT - 0.1f, transform.position.y);
+            // Debug.Log("Out of bounds!");
+            return;
+        }
+
+        // Making sure the enemy isnt in another enemy. If it is, move a little bit away from the closest enemy
+        if (GetClosestEnemy() != null && Vector2.Distance(transform.position, GetClosestEnemy().transform.position) < NEAREST_ENEMY_DISTANCE)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, GetClosestEnemy().transform.position, -SPEED * Time.deltaTime);
+            // Debug.Log("lwk stunlocked probably");
+            return;
+        }
+
+        // Move towards the player
+        transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, SPEED * Time.deltaTime);
+    }
     void Shoot()
     {
         if (!canFire)

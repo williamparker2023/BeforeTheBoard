@@ -4,7 +4,7 @@ using Unity.Netcode.Components;
 
 public class GameManager : NetworkBehaviour
 {
-    [Header("Network Variables")]
+    [Header("Player Info")]
     //Player experience, for leveling up
     [SerializeField] public NetworkVariable<int> playerXP = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] public NetworkVariable<int> XPNeeded = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
