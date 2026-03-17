@@ -9,22 +9,56 @@ public class LobbyUI : MonoBehaviour
     public TMP_Text playerListText;
     public Button startButton;
 
-    void Start()
+    private void Start()
     {
-        if (ConnectionManager.Instance != null)
-        {
-            codeText.text = "Code: " + ConnectionManager.Instance.JoinCode;
-        }
+        RefreshAll();
 
         if (NetworkManager.Singleton != null)
         {
-            startButton.gameObject.SetActive(NetworkManager.Singleton.IsHost);
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientChanged;
         }
+    }
 
+    private void OnDestroy()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientChanged;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientChanged;
+        }
+    }
+
+    private void OnClientChanged(ulong clientId)
+    {
+        RefreshAll();
+    }
+
+    private void RefreshAll()
+    {
+        RefreshCodeText();
+        RefreshStartButton();
         RefreshPlayerList();
     }
 
-    void RefreshPlayerList()
+    private void RefreshCodeText()
+    {
+        if (codeText == null) return;
+
+        if (ConnectionManager.Instance != null)
+            codeText.text = "Code: " + ConnectionManager.Instance.JoinCode;
+        else
+            codeText.text = "Code: ?";
+    }
+
+    private void RefreshStartButton()
+    {
+        if (startButton == null || NetworkManager.Singleton == null) return;
+
+        startButton.gameObject.SetActive(NetworkManager.Singleton.IsHost);
+    }
+
+    private void RefreshPlayerList()
     {
         if (playerListText == null || NetworkManager.Singleton == null) return;
 
@@ -33,13 +67,9 @@ public class LobbyUI : MonoBehaviour
         foreach (ulong id in NetworkManager.Singleton.ConnectedClientsIds)
         {
             if (id == NetworkManager.Singleton.LocalClientId && ConnectionManager.Instance != null)
-            {
                 playerListText.text += ConnectionManager.Instance.PlayerName + "\n";
-            }
             else
-            {
                 playerListText.text += $"Player {id}\n";
-            }
         }
     }
 
@@ -51,5 +81,10 @@ public class LobbyUI : MonoBehaviour
     public void OnLeaveClicked()
     {
         ConnectionManager.Instance.LeaveLobby();
+    }
+
+    private void OnEnable()
+    {
+        Invoke(nameof(RefreshAll), 0.1f);
     }
 }

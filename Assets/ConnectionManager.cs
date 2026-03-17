@@ -94,6 +94,8 @@ public class ConnectionManager : MonoBehaviour
     {
         const string connectionType = "dtls";
 
+        joinCodeString = joinCode;
+
         await UnityServices.InitializeAsync();
         if (!AuthenticationService.Instance.IsSignedIn)
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
