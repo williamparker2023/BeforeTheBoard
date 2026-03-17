@@ -41,21 +41,49 @@ public class BenPlayerTest : NetworkBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {        
-        if (!IsOwner) return;
-
-        if(IsServer)
-        {
-            SetPlayerName("Player " + OwnerClientId);
-        }
-        else
-        {
-            RequestSetPlayerNameServerRpc("Player " + OwnerClientId);
-        }
-
+    {
         rb = GetComponent<Rigidbody2D>();
         GetComponent<SpriteRenderer>().color = Color.green;
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+
+        playerUsername.OnValueChanged += OnPlayerUsernameChanged;
+        UpdateUsernameText(playerUsername.Value.ToString());
+
+        if (!IsOwner) return;
+
+        string chosenName = "Player";
+        if (ConnectionManager.Instance != null)
+        {
+            chosenName = ConnectionManager.Instance.PlayerName;
+        }
+
+        if (IsServer)
+        {
+            SetPlayerName(chosenName);
+        }
+        else
+        {
+            RequestSetPlayerNameServerRpc(chosenName);
+        }
+    }
+
+    public override void OnDestroy()
+    {
+        playerUsername.OnValueChanged -= OnPlayerUsernameChanged;
+        base.OnDestroy();
+    }
+
+    private void OnPlayerUsernameChanged(FixedString64Bytes oldValue, FixedString64Bytes newValue)
+    {
+        UpdateUsernameText(newValue.ToString());
+    }
+
+    private void UpdateUsernameText(string name)
+    {
+        if (usernameText != null)
+        {
+            usernameText.text = name;
+        }
     }
 
     void SetPlayerName(string name)
@@ -63,7 +91,7 @@ public class BenPlayerTest : NetworkBehaviour
         if (IsServer)
         {
             playerUsername.Value = name;
-            usernameText.text = playerUsername.Value.ToString();
+            UpdateUsernameText(name);
         }
         else
         {
@@ -80,7 +108,7 @@ public class BenPlayerTest : NetworkBehaviour
         {
             return;
         }
-        
+
         PlayerMovement();
         // if (playerClassID == 0) ShootProjectile();
         // if (playerClassID == 1) MeleeAttack();
@@ -92,7 +120,7 @@ public class BenPlayerTest : NetworkBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        
+
         Vector2 movement = new Vector2(horizontalInput * SPEED, verticalInput * SPEED);
         rb.linearVelocity = movement;
 
@@ -143,7 +171,7 @@ public class BenPlayerTest : NetworkBehaviour
 
     void ShootProjectile()
     {
-        
+
         if (mainCam == null) mainCam = Camera.main;
 
         if (!canFire)
@@ -165,7 +193,7 @@ public class BenPlayerTest : NetworkBehaviour
             {
                 var instance = Instantiate(bullet, spawnPos, spawnRot);
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
-                
+
                 ProjectileTest projScript = instance.GetComponent<ProjectileTest>(); //Set damage on the projectile
                 projScript.Initialize(rangeDamage);
 
