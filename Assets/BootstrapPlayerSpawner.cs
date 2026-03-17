@@ -1,16 +1,30 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class BootstrapPlayerSpawner : NetworkBehaviour
 {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform[] spawnPoints;
 
+    private bool hasSpawnedPlayers = false;
+
     public override void OnNetworkSpawn()
     {
         Debug.Log($"BootstrapPlayerSpawner OnNetworkSpawn | IsServer={IsServer} | IsClient={IsClient}");
 
         if (!IsServer) return;
+
+        StartCoroutine(SpawnPlayersAfterDelay());
+    }
+
+    private IEnumerator SpawnPlayersAfterDelay()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        if (hasSpawnedPlayers) yield break;
+        hasSpawnedPlayers = true;
 
         SpawnAllPlayers();
     }
@@ -31,8 +45,8 @@ public class BootstrapPlayerSpawner : NetworkBehaviour
             Debug.Log($"Spawning player for client {clientId} at {spawnPos}");
 
             GameObject player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
-
             NetworkObject netObj = player.GetComponent<NetworkObject>();
+
             if (netObj == null)
             {
                 Debug.LogError("Spawned player prefab has no NetworkObject!");

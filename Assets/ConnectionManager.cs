@@ -112,10 +112,6 @@ public class ConnectionManager : MonoBehaviour
         {
             Debug.LogError("Client failed to start.");
         }
-        else
-        {
-            Debug.LogError("Client failed to start.");
-        }
     }
 
     public void StartGame()
