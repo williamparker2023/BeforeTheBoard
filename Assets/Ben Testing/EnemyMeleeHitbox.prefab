@@ -226,5 +226,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMeleeCode
   ShowTopMostFoldoutHeaderGroup: 1
   damage: 0.5
-  LIFETIME: 0.1
+  LIFETIME: 0.2
   force: 0

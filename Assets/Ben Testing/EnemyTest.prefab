@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1890643702
+  GlobalObjectIdHash: 1942725534
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 8
@@ -189,7 +189,7 @@ MonoBehaviour:
   canFire: 0
   timer: 0
   TIME_BETWEEN_SHOTS: 0.6
-  SPEED: 4
+  SPEED: 3
   WORLD_LIMIT: 4.5
   WORLD_X_LIMIT: 9
   NEAREST_ENEMY_DISTANCE: 1
