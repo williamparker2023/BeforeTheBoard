@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Unity.Netcode;
+using System.Collections;
 
 public class LobbyUI : MonoBehaviour
 {
@@ -9,14 +10,41 @@ public class LobbyUI : MonoBehaviour
     public TMP_Text playerListText;
     public Button startButton;
 
+    private LobbyPlayerManager subscribedManager;
+
     private void Start()
     {
-        RefreshAll();
+        RefreshCodeText();
+        RefreshStartButton();
+        RefreshPlayerList();
 
         if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientChanged;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientChanged;
+        }
+
+        StartCoroutine(WaitForLobbyManager());
+    }
+
+    private IEnumerator WaitForLobbyManager()
+    {
+        float timer = 0f;
+        while (LobbyPlayerManager.Instance == null && timer < 5f)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (LobbyPlayerManager.Instance != null)
+        {
+            subscribedManager = LobbyPlayerManager.Instance;
+            subscribedManager.players.OnListChanged += OnPlayerListChanged;
+            RefreshPlayerList();
+        }
+        else
+        {
+            Debug.LogError("LobbyPlayerManager never appeared in Lobby scene.");
         }
     }
 
@@ -27,11 +55,21 @@ public class LobbyUI : MonoBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientChanged;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientChanged;
         }
+
+        if (subscribedManager != null)
+        {
+            subscribedManager.players.OnListChanged -= OnPlayerListChanged;
+        }
     }
 
     private void OnClientChanged(ulong clientId)
     {
         RefreshAll();
+    }
+
+    private void OnPlayerListChanged(NetworkListEvent<PlayerData> changeEvent)
+    {
+        RefreshPlayerList();
     }
 
     private void RefreshAll()
@@ -60,16 +98,19 @@ public class LobbyUI : MonoBehaviour
 
     private void RefreshPlayerList()
     {
-        if (playerListText == null || NetworkManager.Singleton == null) return;
+        if (playerListText == null) return;
 
         playerListText.text = "Players:\n";
 
-        foreach (ulong id in NetworkManager.Singleton.ConnectedClientsIds)
+        if (LobbyPlayerManager.Instance == null)
         {
-            if (id == NetworkManager.Singleton.LocalClientId && ConnectionManager.Instance != null)
-                playerListText.text += ConnectionManager.Instance.PlayerName + "\n";
-            else
-                playerListText.text += $"Player {id}\n";
+            playerListText.text += "Loading...";
+            return;
+        }
+
+        foreach (var player in LobbyPlayerManager.Instance.players)
+        {
+            playerListText.text += $"{player.playerName}\n";
         }
     }
 
@@ -81,10 +122,5 @@ public class LobbyUI : MonoBehaviour
     public void OnLeaveClicked()
     {
         ConnectionManager.Instance.LeaveLobby();
-    }
-
-    private void OnEnable()
-    {
-        Invoke(nameof(RefreshAll), 0.1f);
     }
 }

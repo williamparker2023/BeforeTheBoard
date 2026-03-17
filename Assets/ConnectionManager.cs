@@ -82,7 +82,7 @@ public class ConnectionManager : MonoBehaviour
 
         if (ok)
         {
-            SceneManager.LoadScene("Lobby");
+            NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Single);
         }
         else
         {
@@ -108,9 +108,9 @@ public class ConnectionManager : MonoBehaviour
         bool ok = NetworkManager.Singleton.StartClient();
         Debug.Log("StartClient() => " + ok);
 
-        if (ok)
+        if (!ok)
         {
-            SceneManager.LoadScene("Lobby");
+            Debug.LogError("Client failed to start.");
         }
         else
         {
