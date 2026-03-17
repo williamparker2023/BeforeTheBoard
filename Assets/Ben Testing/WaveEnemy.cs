@@ -95,11 +95,16 @@ public class WaveEnemy : NetworkBehaviour
 
         if (collision.gameObject.CompareTag("PlayerAttack"))
         {
-            // Only server executes this code
-            enemyHealth.Value -= collision.gameObject.GetComponent<ProjectileTest>().damage;
+            //Take damage, depending on if its melee or projectile hit
+            if (collision.gameObject.GetComponent<EnemyProjectileCode>() != null)
+            {
+                enemyHealth.Value -= collision.gameObject.GetComponent<EnemyProjectileCode>().damage;
+            }
+            else if (collision.gameObject.GetComponent<EnemyMeleeCode>() != null)
+            {
+                enemyHealth.Value -= collision.gameObject.GetComponent<EnemyMeleeCode>().damage;
+            }
             collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
-            // Debug.Log("Enemy hit! Current health: " + enemyHealth.Value);
-
 
             if (enemyHealth.Value <= 0)
             {
