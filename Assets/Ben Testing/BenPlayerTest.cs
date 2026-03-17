@@ -42,8 +42,12 @@ public class BenPlayerTest : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if(IsOwner)
+        {
+            GetComponent<SpriteRenderer>().color = Color.green;
+        }
+
         rb = GetComponent<Rigidbody2D>();
-        GetComponent<SpriteRenderer>().color = Color.green;
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
         playerUsername.OnValueChanged += OnPlayerUsernameChanged;
