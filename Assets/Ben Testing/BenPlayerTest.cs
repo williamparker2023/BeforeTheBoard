@@ -3,15 +3,18 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using Unity.Collections;
 using TMPro;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(NetworkTransform))]
 public class BenPlayerTest : NetworkBehaviour
 {
 
+    [SerializeField] public bool isDead = false;
     [SerializeField] int playerClassID = 1; // 0 = bishop, 1 = knight, 2 = rook
     [SerializeField] public NetworkVariable<FixedString64Bytes> playerUsername = new NetworkVariable<FixedString64Bytes>("User", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private TextMeshProUGUI usernameText;
     [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(100.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] private float playerMaxHealth = 100.0f;
 
     // ============== Physics ==============
     Rigidbody2D rb = null;
@@ -113,11 +116,15 @@ public class BenPlayerTest : NetworkBehaviour
             return;
         }
 
-        PlayerMovement();
-        // if (playerClassID == 0) ShootProjectile();
-        // if (playerClassID == 1) MeleeAttack();
-        ShootProjectile();
-        MeleeAttack();
+        if (!isDead)
+        {
+            PlayerMovement();
+            // if (playerClassID == 0) ShootProjectile();
+            // if (playerClassID == 1) MeleeAttack();
+            ShootProjectile();
+            MeleeAttack();
+        }
+
     }
 
     void PlayerMovement()
@@ -211,6 +218,40 @@ public class BenPlayerTest : NetworkBehaviour
         }
     }
 
+    public void KillPlayer()
+    {
+        if (!IsServer) return;
+
+        isDead = true;
+        gameObject.tag = "DeadPlayer";
+        playerHealth.Value = 0;
+        Debug.Log("Player " + OwnerClientId + " has died.");
+        gameObject.
+
+        GetComponent<SpriteRenderer>().color = Color.black; //Death visual indicator
+
+        // gameObject.SetActive(false);
+        // NetworkObject.Despawn(true);
+    }
+
+    public void RevivePlayer()
+    {
+        if (!IsServer) return;
+        gameObject.tag = "Player";
+        playerHealth.Value = playerMaxHealth;
+        Debug.Log("Player " + OwnerClientId + " has been revived.");
+        if(IsOwner)
+        {
+            GetComponent<SpriteRenderer>().color = Color.green; //Revive visual indicator
+
+        }
+        else
+        {
+            GetComponent<SpriteRenderer>().color = Color.white; //Revive visual indicator
+        }
+        isDead = false;
+    }
+
     public void TakeDamage(float damage)
     {
         if (!IsServer) return;
@@ -219,10 +260,10 @@ public class BenPlayerTest : NetworkBehaviour
 
         if (playerHealth.Value <= 0)
         {
-            playerHealth.Value = 0;
-            Debug.Log("Player " + OwnerClientId + " has died.");
+            this.KillPlayer();
+            // Debug.Log("Player " + OwnerClientId + " has died.");
             // gameObject.SetActive(false);
-            NetworkObject.Despawn(true);
+            // NetworkObject.Despawn(true);
         }
     }
 

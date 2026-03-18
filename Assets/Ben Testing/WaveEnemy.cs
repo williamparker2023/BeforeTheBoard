@@ -353,7 +353,7 @@ public class WaveEnemy : NetworkBehaviour
 
         foreach (var playerClient in players)
         {
-            if (playerClient.PlayerObject != null)
+            if (playerClient.PlayerObject != null && playerClient.PlayerObject.CompareTag("Player")) // Only consider alive players
             {
                 // Calculate distance using sqrMagnitude for performance
                 float distance = (playerClient.PlayerObject.transform.position - currentPosition).sqrMagnitude;

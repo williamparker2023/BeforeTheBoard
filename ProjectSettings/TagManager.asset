@@ -9,6 +9,7 @@ TagManager:
   - EnemyRange
   - WaveEnemy
   - BossEnemy
+  - DeadPlayer
   layers:
   - Default
   - TransparentFX
