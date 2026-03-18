@@ -65,7 +65,7 @@ public class WaveEnemy : NetworkBehaviour
         if (Random.value > 0.5f)
         {
             isAggressive.Value = true;
-            GetComponent<SpriteRenderer>().colawor = Color.red;
+            GetComponent<SpriteRenderer>().color = Color.red;
 
         }
         else
