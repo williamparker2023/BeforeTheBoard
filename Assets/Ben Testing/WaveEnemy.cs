@@ -47,7 +47,7 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] float DISTANCE_TO_HIT = 2.0f; //distance the enemy needs to be within to the player to  melee hit
 
 
-    void Awake()
+    public override void OnNetworkSpawn()
     {
         if (!IsServer) return;
         //Randomize between melee and ranged enemy
@@ -65,7 +65,7 @@ public class WaveEnemy : NetworkBehaviour
         if (Random.value > 0.5f)
         {
             isAggressive.Value = true;
-            GetComponent<SpriteRenderer>().color = Color.red;
+            GetComponent<SpriteRenderer>().colawor = Color.red;
 
         }
         else
