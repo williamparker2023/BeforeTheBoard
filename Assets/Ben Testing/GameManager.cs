@@ -25,6 +25,7 @@ public class GameManager : NetworkBehaviour
 
     void Update()
     {
+        UpdateWaveCount();
         if (!IsServer) return;
 
         if (!gameRunning.Value) return;
@@ -61,9 +62,14 @@ public class GameManager : NetworkBehaviour
             //Once finished leveling up continue to the next wave
 
             currentWave.Value++;
-            waveText.text = "Wave: " + currentWave.Value.ToString();
+            UpdateWaveCount();
             RunWave(currentWave.Value);
         }
+    }
+
+    void UpdateWaveCount()
+    {
+        waveText.text = "Wave: " + currentWave.Value.ToString();
     }
 
     void RunWave(int waveNum)

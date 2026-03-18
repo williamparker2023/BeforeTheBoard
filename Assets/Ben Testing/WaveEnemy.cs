@@ -11,10 +11,11 @@ using Unity.VisualScripting;
 public class WaveEnemy : NetworkBehaviour
 {
     //======= VARIABLES TO RANDOMIZE
-    [SerializeField] bool isAggressive = true; //If true, then timid
+    // [SerializeField] bool isAggressive = true; //If true, then timid
+    [SerializeField] public NetworkVariable<bool> isAggressive = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-
-    [SerializeField] bool meleeType = true; //false = projectile
+    [SerializeField] public NetworkVariable<bool> meleeType = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    // [SerializeField] bool meleeType = true; //false = projectile
     [SerializeField] int classType = 0; // 0 = dps (high damage/speed, low health), 1 = tank (low damage/speed, high health)
 
     [SerializeField] public NetworkVariable<float> enemyHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -48,27 +49,28 @@ public class WaveEnemy : NetworkBehaviour
 
     void Awake()
     {
+        if (!IsServer) return;
         //Randomize between melee and ranged enemy
         if (Random.value > 0.5f)
         {
-            meleeType = true;
+            meleeType.Value = true;
             rangeDamage = 0.0f;
         }
         else
         {
-            meleeType = false;
+            meleeType.Value = false;
         }
 
         //Randomize between agressive and timid enemy
         if (Random.value > 0.5f)
         {
-            isAggressive = true;
+            isAggressive.Value = true;
             GetComponent<SpriteRenderer>().color = Color.red;
 
         }
         else
         {
-            isAggressive = false;
+            isAggressive.Value = false;
             GetComponent<SpriteRenderer>().color = Color.orange;
         }
     }
@@ -77,7 +79,7 @@ public class WaveEnemy : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (meleeType)
+        if (meleeType.Value)
         {
             MeleeAttack();
             MeleeMovement();
@@ -169,7 +171,7 @@ public class WaveEnemy : NetworkBehaviour
             return;
         }
 
-        if (isAggressive) //Aggressive: Keep a relative distance from the nearest player (STOP_DISTANCE / RETREAT DISTANCE)
+        if (isAggressive.Value) //Aggressive: Keep a relative distance from the nearest player (STOP_DISTANCE / RETREAT DISTANCE)
         {
             if(Vector2.Distance(transform.position, nearestPlayer.position) > STOP_DISTANCE)
             {

@@ -9,12 +9,14 @@ using Unity.VisualScripting;
 public class BenPlayerTest : NetworkBehaviour
 {
 
-    [SerializeField] public bool isDead = false;
+    // [SerializeField] public bool isDead = false;
+    [SerializeField] public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
     [SerializeField] int playerClassID = 1; // 0 = bishop, 1 = knight, 2 = rook
     [SerializeField] public NetworkVariable<FixedString64Bytes> playerUsername = new NetworkVariable<FixedString64Bytes>("User", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private TextMeshProUGUI usernameText;
-    [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(100.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
-    [SerializeField] private float playerMaxHealth = 100.0f;
+    [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] private float playerMaxHealth = 10.0f;
 
     // ============== Physics ==============
     Rigidbody2D rb = null;
@@ -116,7 +118,7 @@ public class BenPlayerTest : NetworkBehaviour
             return;
         }
 
-        if (!isDead)
+        if (!isDead.Value)
         {
             PlayerMovement();
             // if (playerClassID == 0) ShootProjectile();
@@ -222,7 +224,7 @@ public class BenPlayerTest : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        isDead = true;
+        isDead.Value = true;
         gameObject.tag = "DeadPlayer";
         playerHealth.Value = 0;
         Debug.Log("Player " + OwnerClientId + " has died.");
@@ -249,7 +251,7 @@ public class BenPlayerTest : NetworkBehaviour
         {
             GetComponent<SpriteRenderer>().color = Color.white; //Revive visual indicator
         }
-        isDead = false;
+        isDead.Value = false;
     }
 
     public void TakeDamage(float damage)

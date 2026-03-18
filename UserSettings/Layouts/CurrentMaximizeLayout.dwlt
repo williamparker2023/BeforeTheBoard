@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 13598
+  controlID: 15500
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 13599
+  controlID: 15501
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 13600
+  controlID: 15502
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -200,8 +200,8 @@ MonoBehaviour:
     y: 0
     width: 304
     height: 656
-  m_MinSize: {x: 201, y: 226}
-  m_MaxSize: {x: 4001, y: 4026}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 6}
   m_Panes:
   - {fileID: 6}
@@ -248,11 +248,11 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs:
-      - m_Data: -45172
+      m_SelectedIDs: []
       m_LastClickedID:
-        m_Data: -45172
+        m_Data: 0
       m_ExpandedIDs:
+      - m_Data: -48016
       - m_Data: -45152
       - m_Data: -44538
       - m_Data: -44062
@@ -328,8 +328,8 @@ MonoBehaviour:
     y: 0
     width: 949
     height: 656
-  m_MinSize: {x: 202, y: 226}
-  m_MaxSize: {x: 4002, y: 4026}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 2}
   m_Panes:
   - {fileID: 8}
@@ -997,7 +997,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/!Scenes
+    - Assets
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1007,7 +1007,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/!Scenes
+  - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /Users/benkopf/Desktop/Folders/Projects/Personal/Unity/BeforeTheBoard/BeforeTheBoard
   m_LockTracker:
@@ -1016,9 +1016,9 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 29}
     m_SelectedIDs:
-    - m_Data: 58002
+    - m_Data: 57914
     m_LastClickedID:
-      m_Data: 58002
+      m_Data: 57914
     m_ExpandedIDs:
     - m_Data: 0
     - m_Data: 57914
@@ -1085,9 +1085,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs:
-    - m_Data: -45172
-    m_LastClickedInstanceID: -45172
+    m_SelectedInstanceIDs: []
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
@@ -1176,8 +1175,8 @@ MonoBehaviour:
     y: 0
     width: 427
     height: 994
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
