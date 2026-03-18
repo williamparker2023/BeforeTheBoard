@@ -49,30 +49,43 @@ public class WaveEnemy : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsServer) return;
+        if (IsServer)
+        {
+            if (Random.value > 0.5f)
+            {
+                meleeType.Value = true;
+                rangeDamage = 0.0f;
+            }
+            else
+            {
+                meleeType.Value = false;
+            }
+
+            //Randomize between agressive and timid enemy
+            if (Random.value > 0.5f)
+            {
+                isAggressive.Value = true;
+                GetComponent<SpriteRenderer>().color = Color.red;
+
+            }
+            else
+            {
+                isAggressive.Value = false;
+                GetComponent<SpriteRenderer>().color = Color.orange;
+            }
+        }
+        else
+        {
+            if(isAggressive.Value)
+            {
+                GetComponent<SpriteRenderer>().color = Color.red;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().color = Color.orange;
+            }
+        }
         //Randomize between melee and ranged enemy
-        if (Random.value > 0.5f)
-        {
-            meleeType.Value = true;
-            rangeDamage = 0.0f;
-        }
-        else
-        {
-            meleeType.Value = false;
-        }
-
-        //Randomize between agressive and timid enemy
-        if (Random.value > 0.5f)
-        {
-            isAggressive.Value = true;
-            GetComponent<SpriteRenderer>().color = Color.red;
-
-        }
-        else
-        {
-            isAggressive.Value = false;
-            GetComponent<SpriteRenderer>().color = Color.orange;
-        }
     }
 
     void Update()
