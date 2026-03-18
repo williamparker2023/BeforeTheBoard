@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using Unity.Netcode.Components;
+using TMPro;
 
 public class GameManager : NetworkBehaviour
 {
@@ -20,6 +21,7 @@ public class GameManager : NetworkBehaviour
     [SerializeField] public NetworkVariable<bool> gameRunning = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     //Every 4th wave is a boss wave, so we'll use this to determine when to spawn bosses
     [SerializeField] public NetworkVariable<int> currentWave = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] public TMP_Text waveText;
 
     void Update()
     {
@@ -59,6 +61,7 @@ public class GameManager : NetworkBehaviour
             //Once finished leveling up continue to the next wave
 
             currentWave.Value++;
+            waveText.text = "Wave: " + currentWave.Value.ToString();
             RunWave(currentWave.Value);
         }
     }
