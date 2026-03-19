@@ -7,7 +7,7 @@ using Unity.Netcode.Components;
 public class MeleeAttack : NetworkBehaviour
 {
     [SerializeField] public float damage = 1.0f;
-    [SerializeField] float LIFETIME = 0.1f;
+    [SerializeField] float LIFETIME = 0.5f;
     // private Vector3 mousePos;
     public float force;
 
@@ -18,8 +18,10 @@ public class MeleeAttack : NetworkBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {        
-        if(!IsOwner) return;
+    {
+        gameObject.tag = "PlayerAttack";
+
+        if (!IsOwner) return;
 
         if (IsClient)
         {
