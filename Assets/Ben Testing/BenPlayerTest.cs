@@ -134,6 +134,10 @@ public class BenPlayerTest : NetworkBehaviour
             ShootProjectile();
             MeleeAttack();
         }
+        else
+        {
+            rb.linearVelocity = new Vector2(0, 0); //stop movement when dead
+        }
 
     }
 
