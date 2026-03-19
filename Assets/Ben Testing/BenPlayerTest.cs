@@ -45,6 +45,9 @@ public class BenPlayerTest : NetworkBehaviour
     [SerializeField] private float meleeTimer;
     [SerializeField] float TIME_BETWEEN_MELEE = 1.0f;
 
+    // ============== Death Effect ============== 
+    [SerializeField] GameObject deathParticle;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -244,6 +247,18 @@ public class BenPlayerTest : NetworkBehaviour
 
         GetComponent<SpriteRenderer>().color = Color.black; //Death visual indicator
 
+        if (IsServer)
+            {
+                var instance = Instantiate(deathParticle, gameObject.transform.position, Quaternion.identity);
+                var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+
+                instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
+            }
+            else if (IsClient)
+            {
+                RequestSpawnDeathEffectServerRpc(gameObject.transform.position, Quaternion.identity);
+            }
+
         // gameObject.SetActive(false);
         // NetworkObject.Despawn(true);
     }
@@ -341,5 +356,13 @@ public class BenPlayerTest : NetworkBehaviour
     {
         playerUsername.Value = name;
         usernameText.text = playerUsername.Value.ToString();
+    }
+
+    [ServerRpc]
+    private void RequestSpawnDeathEffectServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
+    {
+        GameObject spawnedObject = Instantiate(deathParticle, spawnPos, spawnRot);
+        var netObj = spawnedObject.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
     }
 }
