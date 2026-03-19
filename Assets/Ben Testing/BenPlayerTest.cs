@@ -185,13 +185,15 @@ public class BenPlayerTest : NetworkBehaviour
             {
                 var instance = Instantiate(meleeHitbox, spawnPos, spawnRot);
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+
                 MeleeAttack meleeScript = instance.GetComponent<MeleeAttack>(); //Set damage on the melee hitbox
                 meleeScript.Initialize(meleeDamage);
+                
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
             else if (IsClient)
             {
-                RequestMeleeSpawnServerRpc(spawnPos, spawnRot);
+                RequestMeleeSpawnServerRpc(spawnPos, spawnRot, meleeDamage);
             }
             canMelee = false;
         }
@@ -335,9 +337,16 @@ public class BenPlayerTest : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void RequestMeleeSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
+    private void RequestMeleeSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, float damage, ServerRpcParams rpcParams = default)
     {
         GameObject spawnedObject = Instantiate(meleeHitbox, spawnPos, spawnRot);
+
+        MeleeAttack meleeScript = spawnedObject.GetComponent<MeleeAttack>();
+        if (meleeScript != null)
+        {
+            meleeScript.Initialize(damage);
+        }
+
         var netObj = spawnedObject.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
     }

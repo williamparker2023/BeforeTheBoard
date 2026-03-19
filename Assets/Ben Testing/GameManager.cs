@@ -162,6 +162,8 @@ public class GameManager : NetworkBehaviour
         //Return false if issue
         // }
         //Once all players level up...
+
+        //Go through each player, level them up
         gameRunning.Value = true;
     }
 

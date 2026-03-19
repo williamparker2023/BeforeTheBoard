@@ -180,7 +180,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeleeAttack
   ShowTopMostFoldoutHeaderGroup: 1
   damage: 0.5
-  LIFETIME: 0.1
+  LIFETIME: 0.2
   force: 0
 --- !u!61 &5819633308608873764
 BoxCollider2D:

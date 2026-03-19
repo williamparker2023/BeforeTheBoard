@@ -110,7 +110,7 @@ public class WaveEnemy : NetworkBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         if (!IsServer) return;
 
