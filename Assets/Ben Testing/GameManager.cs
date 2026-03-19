@@ -26,6 +26,23 @@ public class GameManager : NetworkBehaviour
     [SerializeField] public TMP_Text waveText;
     [SerializeField] public Slider xpSlider;
 
+    public override void OnNetworkSpawn()
+    {
+        playerXP.OnValueChanged += OnXPChanged;
+        XPNeeded.OnValueChanged += OnXPChanged;
+        UpdateXPSlider();
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        playerXP.OnValueChanged -= OnXPChanged;
+        XPNeeded.OnValueChanged -= OnXPChanged;
+    }
+
+    private void OnXPChanged<T>(T oldValue, T newValue)
+    {
+        UpdateXPSlider();
+    }
 
     void Update()
     {
@@ -36,14 +53,14 @@ public class GameManager : NetworkBehaviour
         //============IF THE GAME IS RUNNING============
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("WaveEnemy");
         int enemyNum = 0;
-        if(enemies != null)
+        if (enemies != null)
         {
             enemyNum = enemies.Length;
         }
 
         GameObject[] bosses = GameObject.FindGameObjectsWithTag("BossEnemy");
         int bossNum = 0;
-        if(bosses != null)
+        if (bosses != null)
         {
             bossNum = bosses.Length;
         }
@@ -51,7 +68,7 @@ public class GameManager : NetworkBehaviour
         if (enemyNum == 0 && bossNum == 0) //If there are no more enemies alive... (WE CAN CHANGE THIS TO WORK ON A TIMER INSTEAD. IT DONT MATTER ATM)
         {
             //First, check if the players need to level up
-            if(playerXP.Value >= XPNeeded.Value)
+            if (playerXP.Value >= XPNeeded.Value)
             {
                 playerLevel.Value++;
                 gameRunning.Value = false; //Pause game cycle
@@ -99,7 +116,7 @@ public class GameManager : NetworkBehaviour
         {
             //============SPAWN WAVE ENEMIES============
             //Randomize number of enemies based on wave number & player count
-            int numOfEnemies = waveNum + (waveNum/2);
+            int numOfEnemies = waveNum + (waveNum / 2);
 
             //randomize spawn direction of enemies
             Vector2 colliderWorldCenter = (Vector2)rightSideSpawn.transform.position + rightSideSpawn.offset;
@@ -107,7 +124,7 @@ public class GameManager : NetworkBehaviour
             float width, height, randomPosX, randomPosY;
 
             //Spawn Enemies
-            for(int i = 0; i < numOfEnemies; i++)
+            for (int i = 0; i < numOfEnemies; i++)
             {
                 // Calculate bounds taking into account the scale of the object
                 width = rightSideSpawn.size.x * rightSideSpawn.transform.lossyScale.x;
@@ -115,11 +132,11 @@ public class GameManager : NetworkBehaviour
 
                 randomPosX = Random.Range(colliderWorldCenter.x - width / 2f, colliderWorldCenter.x + width / 2f);
                 randomPosY = Random.Range(colliderWorldCenter.y - height / 2f, colliderWorldCenter.y + height / 2f);
-                Vector2 randomPos = new Vector2 (randomPosX, randomPosY);
-                
+                Vector2 randomPos = new Vector2(randomPosX, randomPosY);
+
                 var instance = Instantiate(enemyPrefab, randomPos, Quaternion.identity);
 
-                if(IsServer)
+                if (IsServer)
                 {
                     var instanceNetworkObject = instance.GetComponent<NetworkObject>();
                     instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
@@ -139,10 +156,10 @@ public class GameManager : NetworkBehaviour
         //Spawn level up GUI
         // while(true)
         // {
-                //Wait for player input to choose a level up option
-                //Apply the chosen level up option to the player
-                //Break out of the loop once the player has made their choice
-                //Return false if issue
+        //Wait for player input to choose a level up option
+        //Apply the chosen level up option to the player
+        //Break out of the loop once the player has made their choice
+        //Return false if issue
         // }
         //Once all players level up...
         gameRunning.Value = true;
