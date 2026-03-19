@@ -199,7 +199,6 @@ public class BenPlayerTest : NetworkBehaviour
 
     void ShootProjectile()
     {
-
         if (mainCam == null) mainCam = Camera.main;
 
         if (!canFire)
@@ -243,21 +242,11 @@ public class BenPlayerTest : NetworkBehaviour
         gameObject.tag = "DeadPlayer";
         playerHealth.Value = 0;
         Debug.Log("Player " + OwnerClientId + " has died.");
-        gameObject.
 
         GetComponent<SpriteRenderer>().color = Color.black; //Death visual indicator
 
-        if (IsServer)
-            {
-                var instance = Instantiate(deathParticle, gameObject.transform.position, Quaternion.identity);
-                var instanceNetworkObject = instance.GetComponent<NetworkObject>();
-
-                instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
-            }
-            else if (IsClient)
-            {
-                RequestSpawnDeathEffectServerRpc(gameObject.transform.position, Quaternion.identity);
-            }
+        // Spawn death effect on all clients (including host)
+        SpawnDeathEffectClientRpc(gameObject.transform.position, Quaternion.identity);
 
         // gameObject.SetActive(false);
         // NetworkObject.Despawn(true);
@@ -283,7 +272,9 @@ public class BenPlayerTest : NetworkBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (!IsServer) return;
+        if (!IsServer || isDead.Value) return;
+
+
 
         playerHealth.Value -= damage;
         UpdateHealthBar();
@@ -358,11 +349,10 @@ public class BenPlayerTest : NetworkBehaviour
         usernameText.text = playerUsername.Value.ToString();
     }
 
-    [ServerRpc]
-    private void RequestSpawnDeathEffectServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
+    [ClientRpc]
+    private void SpawnDeathEffectClientRpc(Vector3 spawnPos, Quaternion spawnRot)
     {
-        GameObject spawnedObject = Instantiate(deathParticle, spawnPos, spawnRot);
-        var netObj = spawnedObject.GetComponent<NetworkObject>();
-        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+        if (deathParticle == null) return;
+        Instantiate(deathParticle, spawnPos, spawnRot);
     }
 }
