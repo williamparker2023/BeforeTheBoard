@@ -4,6 +4,7 @@ using Unity.Netcode.Components;
 using Unity.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(NetworkTransform))]
 public class BenPlayerTest : NetworkBehaviour
@@ -16,6 +17,8 @@ public class BenPlayerTest : NetworkBehaviour
     [SerializeField] public NetworkVariable<FixedString64Bytes> playerUsername = new NetworkVariable<FixedString64Bytes>("User", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private TextMeshProUGUI usernameText;
     [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    [SerializeField] public Slider healthSlider; // Reference the Slider component
+
     [SerializeField] private float playerMaxHealth = 10.0f;
 
     // ============== Physics ==============
@@ -58,6 +61,10 @@ public class BenPlayerTest : NetworkBehaviour
         playerUsername.OnValueChanged += OnPlayerUsernameChanged;
         UpdateUsernameText(playerUsername.Value.ToString());
 
+        // Ensure all clients update the health bar when the networked health value changes
+        playerHealth.OnValueChanged += OnPlayerHealthChanged;
+        UpdateHealthBar();
+
         if (!IsOwner) return;
 
         string chosenName = "Player";
@@ -79,6 +86,7 @@ public class BenPlayerTest : NetworkBehaviour
     public override void OnDestroy()
     {
         playerUsername.OnValueChanged -= OnPlayerUsernameChanged;
+        playerHealth.OnValueChanged -= OnPlayerHealthChanged;
         base.OnDestroy();
     }
 
@@ -259,7 +267,7 @@ public class BenPlayerTest : NetworkBehaviour
         if (!IsServer) return;
 
         playerHealth.Value -= damage;
-
+        UpdateHealthBar();
         if (playerHealth.Value <= 0)
         {
             this.KillPlayer();
@@ -293,6 +301,19 @@ public class BenPlayerTest : NetworkBehaviour
     {
         gameObject.SetActive(false);
         base.OnNetworkDespawn();
+    }
+
+    private void OnPlayerHealthChanged(float previousValue, float newValue)
+    {
+        UpdateHealthBar();
+    }
+
+    public void UpdateHealthBar()
+    {
+        if (healthSlider != null)
+        {
+            healthSlider.value = playerHealth.Value / playerMaxHealth;
+        }
     }
 
     [ServerRpc]
