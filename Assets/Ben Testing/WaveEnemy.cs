@@ -10,6 +10,10 @@ using Unity.VisualScripting;
 [RequireComponent(typeof(NetworkObject))]
 public class WaveEnemy : NetworkBehaviour
 {
+
+    [SerializeField] public int enemyXP = 25; //XP given when this enemy dies, this is just an example value, we can change it later
+    [SerializeField] GameManager gameManager;
+
     //======= VARIABLES TO RANDOMIZE
     // [SerializeField] bool isAggressive = true; //If true, then timid
     [SerializeField] public NetworkVariable<bool> isAggressive = new NetworkVariable<bool>(true, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -85,6 +89,8 @@ public class WaveEnemy : NetworkBehaviour
                 GetComponent<SpriteRenderer>().color = Color.orange;
             }
         }
+
+        gameManager = Object.FindFirstObjectByType<GameManager>();
         //Randomize between melee and ranged enemy
     }
 
@@ -131,6 +137,9 @@ public class WaveEnemy : NetworkBehaviour
     private void KillEnemy()
     {
         if (!IsServer) return;
+
+        gameManager.AddXP(enemyXP); //Give player XP for killing the enemy, this is just an example, we can change it later
+
         NetworkObject.Despawn(true);
     }
 
