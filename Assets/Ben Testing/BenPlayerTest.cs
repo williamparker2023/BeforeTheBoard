@@ -13,7 +13,9 @@ public class BenPlayerTest : NetworkBehaviour
     // [SerializeField] public bool isDead = false;
     [SerializeField] public NetworkVariable<bool> isDead = new NetworkVariable<bool>(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
-    [SerializeField] int playerClassID = 1; // 0 = bishop, 1 = knight, 2 = rook
+    [SerializeField] public NetworkVariable<int> playerClassID = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server); //0 = ranged. 1 = melee
+
+
     [SerializeField] public NetworkVariable<FixedString64Bytes> playerUsername = new NetworkVariable<FixedString64Bytes>("User", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] private TextMeshProUGUI usernameText;
     [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
@@ -132,10 +134,15 @@ public class BenPlayerTest : NetworkBehaviour
         if (!isDead.Value)
         {
             PlayerMovement();
-            // if (playerClassID == 0) ShootProjectile();
-            // if (playerClassID == 1) MeleeAttack();
-            ShootProjectile();
-            MeleeAttack();
+            
+            if(playerClassID.Value == 0) //If ranged
+            {
+                ShootProjectile();
+            }
+            else if(playerClassID.Value == 1) //If melee
+            {
+                MeleeAttack();
+            }
         }
         else
         {
