@@ -134,7 +134,7 @@ public class BenPlayerTest : NetworkBehaviour
         if (!isDead.Value)
         {
             PlayerMovement();
-            
+
             if(playerClassID.Value == 0) //If ranged
             {
                 ShootProjectile();
@@ -175,7 +175,7 @@ public class BenPlayerTest : NetworkBehaviour
             }
         }
 
-        if (Input.GetMouseButton(1) && canMelee)
+        if (Input.GetMouseButton(0) && canMelee)
         {
             if (mainCam == null) mainCam = Camera.main;
             Vector3 screenPos = Input.mousePosition;
