@@ -12,25 +12,50 @@ public class NewPlayerCustomizer : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        // Find the world game objects
-        classSelectionUI = GameObject.Find("/Canvas/ClassSelectionUI");
-        meleeUpgradesUI = GameObject.Find("/Canvas/MeleeUpgradesUI");
-        rangeUpgradesUI = GameObject.Find("/Canvas/RangeUpgradesUI");
+        // Find the world game objects - try multiple possible paths
+        classSelectionUI = GameObject.Find("ClassSelectionUI") ?? GameObject.Find("/Canvas/ClassSelectionUI") ?? GameObject.Find("Canvas/ClassSelectionUI");
+        meleeUpgradesUI = GameObject.Find("MeleeUpgradesUI") ?? GameObject.Find("/Canvas/MeleeUpgradesUI") ?? GameObject.Find("Canvas/MeleeUpgradesUI");
+        rangeUpgradesUI = GameObject.Find("RangeUpgradesUI") ?? GameObject.Find("/Canvas/RangeUpgradesUI") ?? GameObject.Find("Canvas/RangeUpgradesUI");
+        loadingBar = GameObject.Find("LoadingBar") ?? GameObject.Find("/Canvas/LoadingBar") ?? GameObject.Find("Canvas/LoadingBar");
 
-        // Find your buttons
-        Button rangeButton = classSelectionUI.transform.Find("/Canvas/ClassSelectionUI/SelectBishop").GetComponent<Button>();
-        Button meleeButton = classSelectionUI.transform.Find("/Canvas/ClassSelectionUI/SelectRook").GetComponent<Button>();
+        // Debug logging
+        Debug.Log($"Player {OwnerClientId} (IsOwner: {IsOwner}, IsServer: {IsServer}) - UI Found: ClassSelectionUI={classSelectionUI != null}, MeleeUpgradesUI={meleeUpgradesUI != null}, RangeUpgradesUI={rangeUpgradesUI != null}");
 
-        // Add listeners
-        rangeButton.onClick.AddListener(SetPlayerClassRange);
-        meleeButton.onClick.AddListener(SetPlayerClassMelee);
+        if (classSelectionUI != null)
+        {
+            // Find buttons within the classSelectionUI - use relative paths
+            Transform selectBishop = classSelectionUI.transform.Find("SelectBishop");
+            Transform selectRook = classSelectionUI.transform.Find("SelectRook");
 
-        loadingBar = GameObject.Find("/Canvas/LoadingBar");
+            if (selectBishop != null)
+            {
+                Button rangeButton = selectBishop.GetComponent<Button>();
+                if (rangeButton != null)
+                {
+                    rangeButton.onClick.AddListener(SetPlayerClassRange);
+                    Debug.Log("Range button listener added");
+                }
+            }
 
-        classSelectionUI.SetActive(true);
-        meleeUpgradesUI.SetActive(false);
-        rangeUpgradesUI.SetActive(false);
-        loadingBar.SetActive(false);
+            if (selectRook != null)
+            {
+                Button meleeButton = selectRook.GetComponent<Button>();
+                if (meleeButton != null)
+                {
+                    meleeButton.onClick.AddListener(SetPlayerClassMelee);
+                    Debug.Log("Melee button listener added");
+                }
+            }
+        }
+
+        // Only set UI active if this is the local player (owner)
+        if (IsOwner)
+        {
+            if (classSelectionUI != null) classSelectionUI.SetActive(true);
+            if (meleeUpgradesUI != null) meleeUpgradesUI.SetActive(false);
+            if (rangeUpgradesUI != null) rangeUpgradesUI.SetActive(false);
+            if (loadingBar != null) loadingBar.SetActive(false);
+        }
     }
 
     public void SetPlayerClassRange()
@@ -39,6 +64,7 @@ public class NewPlayerCustomizer : NetworkBehaviour
         if (IsOwner)
         {
             RequestSetPlayerClassServerRpc(0); // 0 = Ranged
+            UpdateUIForClassSelection(0);
         }
     }
 
@@ -48,26 +74,35 @@ public class NewPlayerCustomizer : NetworkBehaviour
         if (IsOwner)
         {
             RequestSetPlayerClassServerRpc(1); // 1 = Melee
+            UpdateUIForClassSelection(1);
         }
     }
 
-    void UpdateUIForClassSelection()
+    void UpdateUIForClassSelection(int classID)
     {
-        if (IsOwner)
-        {
-            classSelectionUI.SetActive(false);
-            var playerScript = gameObject.GetComponent<BenPlayerTest>();
+        if (!IsOwner) return;
 
-            if (playerScript.playerClassID.Value == 0) // Ranged
+        Debug.Log($"Updating UI for player {OwnerClientId} to class {classID}");
+
+        if (classSelectionUI != null) classSelectionUI.SetActive(false);
+
+        if (classID == 0) // Ranged
+        {
+            if (rangeUpgradesUI != null)
             {
                 rangeUpgradesUI.SetActive(true);
-                meleeUpgradesUI.SetActive(false);
+                Debug.Log("Range upgrades UI activated for player " + OwnerClientId);
             }
-            else if (playerScript.playerClassID.Value == 1) // Melee
+            if (meleeUpgradesUI != null) meleeUpgradesUI.SetActive(false);
+        }
+        else if (classID == 1) // Melee
+        {
+            if (meleeUpgradesUI != null)
             {
                 meleeUpgradesUI.SetActive(true);
-                rangeUpgradesUI.SetActive(false);
+                Debug.Log("Melee upgrades UI activated for player " + OwnerClientId);
             }
+            if (rangeUpgradesUI != null) rangeUpgradesUI.SetActive(false);
         }
     }
 
@@ -86,8 +121,7 @@ public class NewPlayerCustomizer : NetworkBehaviour
         {
             playerScript.playerClassID.Value = classID;
             // Notify all clients via ClientRpc so UI updates immediately on owner's client
-            UpdateUIForClassSelection();
-
+            OnPlayerClassChangedClientRpc(classID);
         }
         else
         {
@@ -95,5 +129,10 @@ public class NewPlayerCustomizer : NetworkBehaviour
         }
     }
 
-
+    [ClientRpc]
+    private void OnPlayerClassChangedClientRpc(int classID)
+    {
+        // All clients update UI based on the new class selection
+        UpdateUIForClassSelection(classID);
+    }
 }
