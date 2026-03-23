@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 4410228910525781600}
   - component: {fileID: 5948896054183268361}
   - component: {fileID: 5531774319224258433}
+  - component: {fileID: -6054285306322511170}
   - component: {fileID: -1708614259379764059}
   - component: {fileID: -450530428070712570}
   - component: {fileID: -3420164780803242845}
@@ -296,7 +297,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   isDead:
     m_InternalValue: 0
-  playerClassID: 1
+  playerClassID:
+    m_InternalValue: 0
   playerUsername:
     m_InternalValue:
       utf8LengthInBytes: 4
@@ -383,6 +385,22 @@ MonoBehaviour:
   meleeTimer: 0
   TIME_BETWEEN_MELEE: 1
   deathParticle: {fileID: 7088772639658404154, guid: 09359a49a2c504442b6624eddc72ec8b, type: 3}
+--- !u!114 &-6054285306322511170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146733968957911114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3260c380782d44361bc9a781ba044c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NewPlayerCustomizer
+  ShowTopMostFoldoutHeaderGroup: 1
+  classSelectionUI: {fileID: 0}
+  meleeUpgradesUI: {fileID: 0}
+  rangeUpgradesUI: {fileID: 0}
 --- !u!50 &-1708614259379764059
 Rigidbody2D:
   serializedVersion: 5
