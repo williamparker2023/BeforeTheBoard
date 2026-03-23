@@ -39,6 +39,7 @@ public class NewPlayerCustomizer : NetworkBehaviour
         if (IsOwner)
         {
             RequestSetPlayerClassServerRpc(0); // 0 = Ranged
+            UpdateUIForClassSelection();
         }
     }
 
@@ -48,6 +49,7 @@ public class NewPlayerCustomizer : NetworkBehaviour
         if (IsOwner)
         {
             RequestSetPlayerClassServerRpc(1); // 1 = Melee
+            UpdateUIForClassSelection();
         }
     }
 
@@ -85,7 +87,6 @@ public class NewPlayerCustomizer : NetworkBehaviour
         {
             playerScript.playerClassID.Value = classID;
             // Notify all clients via ClientRpc so UI updates immediately on owner's client
-            OnPlayerClassChangedClientRpc(classID);
         }
         else
         {
@@ -93,10 +94,5 @@ public class NewPlayerCustomizer : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    private void OnPlayerClassChangedClientRpc(int classID)
-    {
-        // All clients update UI based on the new class selection
-        UpdateUIForClassSelection();
-    }
+
 }
