@@ -39,7 +39,6 @@ public class NewPlayerCustomizer : NetworkBehaviour
         if (IsOwner)
         {
             RequestSetPlayerClassServerRpc(0); // 0 = Ranged
-            UpdateUIForClassSelection();
         }
     }
 
@@ -49,26 +48,26 @@ public class NewPlayerCustomizer : NetworkBehaviour
         if (IsOwner)
         {
             RequestSetPlayerClassServerRpc(1); // 1 = Melee
-            UpdateUIForClassSelection();
         }
     }
 
     void UpdateUIForClassSelection()
     {
-        if (!IsOwner) return;
-
-        classSelectionUI.SetActive(false);
-        var playerScript = gameObject.GetComponent<BenPlayerTest>();
-
-        if (playerScript.playerClassID.Value == 0) // Ranged
+        if (IsOwner)
         {
-            rangeUpgradesUI.SetActive(true);
-            meleeUpgradesUI.SetActive(false);
-        }
-        else if (playerScript.playerClassID.Value == 1) // Melee
-        {
-            meleeUpgradesUI.SetActive(true);
-            rangeUpgradesUI.SetActive(false);
+            classSelectionUI.SetActive(false);
+            var playerScript = gameObject.GetComponent<BenPlayerTest>();
+
+            if (playerScript.playerClassID.Value == 0) // Ranged
+            {
+                rangeUpgradesUI.SetActive(true);
+                meleeUpgradesUI.SetActive(false);
+            }
+            else if (playerScript.playerClassID.Value == 1) // Melee
+            {
+                meleeUpgradesUI.SetActive(true);
+                rangeUpgradesUI.SetActive(false);
+            }
         }
     }
 
@@ -87,6 +86,8 @@ public class NewPlayerCustomizer : NetworkBehaviour
         {
             playerScript.playerClassID.Value = classID;
             // Notify all clients via ClientRpc so UI updates immediately on owner's client
+            UpdateUIForClassSelection();
+
         }
         else
         {
