@@ -306,7 +306,15 @@ public class BenPlayerTest : NetworkBehaviour
 
     public void LevelUp()
     {
-        playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease;
+        if(playerClassID.Value == 0) // Ranged
+        {
+            playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease;
+        }
+        else // Melee
+        {
+            playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease + 0.5f;
+        }
+        
         meleeDamage.Value = meleeDamage.Value + meleeDmgIncrease;
         rangeDamage.Value = rangeDamage.Value + rangeDmgIncrease;
     }
