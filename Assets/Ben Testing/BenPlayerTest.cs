@@ -21,7 +21,7 @@ public class BenPlayerTest : NetworkBehaviour
     [SerializeField] public NetworkVariable<float> playerHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] public Slider healthSlider; // Reference the Slider component
 
-    [SerializeField] private float playerMaxHealth = 10.0f;
+    [SerializeField] public NetworkVariable<float> playerMaxHealth = new NetworkVariable<float>(10.0f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     // ============== Physics ==============
     Rigidbody2D rb = null;
@@ -33,7 +33,8 @@ public class BenPlayerTest : NetworkBehaviour
     private Vector3 mousePos;
 
     // ============== BISHOP Shooting ==============
-    [SerializeField] public float rangeDamage = 0.5f;
+    // [SerializeField] public float rangeDamage = 0.5f;
+    [SerializeField] public NetworkVariable<float> rangeDamage = new NetworkVariable<float>(0.5f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     public GameObject bullet;
     public bool canFire;
@@ -41,7 +42,9 @@ public class BenPlayerTest : NetworkBehaviour
     [SerializeField] float TIME_BETWEEN_SHOTS = 3.0f;
 
     // ============== KNIGHT Melee ==============
-    [SerializeField] public float meleeDamage = 1.0f;
+    [SerializeField] public NetworkVariable<float> meleeDamage = new NetworkVariable<float>(1.5f, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+
+
     public GameObject meleeHitbox;
     public bool canMelee;
     [SerializeField] private float meleeTimer;
@@ -199,13 +202,13 @@ public class BenPlayerTest : NetworkBehaviour
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
 
                 MeleeAttack meleeScript = instance.GetComponent<MeleeAttack>(); //Set damage on the melee hitbox
-                meleeScript.Initialize(meleeDamage);
+                meleeScript.Initialize(meleeDamage.Value);
                 
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
             else if (IsClient)
             {
-                RequestMeleeSpawnServerRpc(spawnPos, spawnRot, meleeDamage);
+                RequestMeleeSpawnServerRpc(spawnPos, spawnRot, meleeDamage.Value);
             }
             canMelee = false;
         }
@@ -236,7 +239,7 @@ public class BenPlayerTest : NetworkBehaviour
                 var instanceNetworkObject = instance.GetComponent<NetworkObject>();
 
                 ProjectileTest projScript = instance.GetComponent<ProjectileTest>(); //Set damage on the projectile
-                projScript.Initialize(rangeDamage);
+                projScript.Initialize(rangeDamage.Value);
 
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
@@ -270,7 +273,7 @@ public class BenPlayerTest : NetworkBehaviour
     {
         if (!IsServer) return;
         gameObject.tag = "Player";
-        playerHealth.Value = playerMaxHealth;
+        playerHealth.Value = playerMaxHealth.Value;
         Debug.Log("Player " + OwnerClientId + " has been revived.");
         if(IsOwner)
         {
@@ -303,9 +306,9 @@ public class BenPlayerTest : NetworkBehaviour
 
     public void LevelUp()
     {
-        playerHealth.Value = playerHealth.Value + hpIncrease;
-        meleeDamage = meleeDamage + meleeDmgIncrease;
-        rangeDamage = rangeDamage + rangeDmgIncrease;
+        playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease;
+        meleeDamage.Value = meleeDamage.Value + meleeDmgIncrease;
+        rangeDamage.Value = rangeDamage.Value + rangeDmgIncrease;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -343,7 +346,7 @@ public class BenPlayerTest : NetworkBehaviour
     {
         if (healthSlider != null)
         {
-            healthSlider.value = playerHealth.Value / playerMaxHealth;
+            healthSlider.value = playerHealth.Value / playerMaxHealth.Value;
         }
     }
 
