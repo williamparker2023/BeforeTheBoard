@@ -9,7 +9,9 @@ public class GameManager : NetworkBehaviour
 {
     [Header("SpawnLocations")]
     [SerializeField] public BoxCollider2D rightSideSpawn;
+    [SerializeField] public BoxCollider2D healthPackSpawn;
     [SerializeField] public GameObject enemyPrefab;
+    [SerializeField] public GameObject healthPackPrefab;
 
     [Header("Player Info")]
     //Player experience, for leveling up
@@ -150,6 +152,31 @@ public class GameManager : NetworkBehaviour
                     RequestSpawnServerRpc(randomPos, Quaternion.identity);
                 }
             }
+
+            //Spawn HealthPacks
+            for (int i = 0; i < waveNum/2; i++)
+            {
+                // Calculate bounds taking into account the scale of the object
+                width = healthPackSpawn.size.x * healthPackSpawn.transform.lossyScale.x;
+                height = healthPackSpawn.size.y * healthPackSpawn.transform.lossyScale.y;
+
+                randomPosX = Random.Range(colliderWorldCenter.x - width / 2f, colliderWorldCenter.x + width / 2f);
+                randomPosY = Random.Range(colliderWorldCenter.y - height / 2f, colliderWorldCenter.y + height / 2f);
+                Vector2 randomPos = new Vector2(randomPosX, randomPosY);
+
+                var instance = Instantiate(healthPackPrefab, randomPos, Quaternion.identity);
+
+                if (IsServer)
+                {
+                    var instanceNetworkObject = instance.GetComponent<NetworkObject>();
+                    instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
+
+                }
+                else if (IsClient)
+                {
+                    RequestSpawnHPServerRpc(randomPos, Quaternion.identity);
+                }
+            }
         }
     }
 
@@ -165,7 +192,7 @@ public class GameManager : NetworkBehaviour
                 playerClient.PlayerObject.GetComponent<BenPlayerTest>().LevelUp();
             }
         }
-        
+
         //Go through each player, level them up
         gameRunning.Value = true;
     }
@@ -187,6 +214,14 @@ public class GameManager : NetworkBehaviour
     private void RequestSpawnServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
     {
         GameObject spawnedObject = Instantiate(enemyPrefab, spawnPos, spawnRot);
+        var netObj = spawnedObject.GetComponent<NetworkObject>();
+        netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+    }
+
+    [ServerRpc]
+    private void RequestSpawnHPServerRpc(Vector3 spawnPos, Quaternion spawnRot, ServerRpcParams rpcParams = default)
+    {
+        GameObject spawnedObject = Instantiate(healthPackPrefab, spawnPos, spawnRot);
         var netObj = spawnedObject.GetComponent<NetworkObject>();
         netObj.SpawnWithOwnership(rpcParams.Receive.SenderClientId);
     }

@@ -314,7 +314,7 @@ public class BenPlayerTest : NetworkBehaviour
         {
             playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease + 0.5f;
         }
-        
+
         meleeDamage.Value = meleeDamage.Value + meleeDmgIncrease;
         rangeDamage.Value = rangeDamage.Value + rangeDmgIncrease;
     }
@@ -335,6 +335,11 @@ public class BenPlayerTest : NetworkBehaviour
             TakeDamage(collision.gameObject.GetComponent<EnemyMeleeCode>().damage);
             collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
             // Debug.Log("Player hit! Current health: " + playerHealth.Value);
+            Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.CompareTag("HealthPack"))
+        {
+            playerHealth.Value = playerHealth.Value + 3; //increase player health by 3
             Destroy(collision.gameObject);
         }
     }
