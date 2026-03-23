@@ -7,6 +7,9 @@ using System.Xml.Serialization;
 
 public class GameManager : NetworkBehaviour
 {
+    [Header("Backgrounds")]
+    [SerializeField] public Sprite[] backgrounds;
+
     [Header("SpawnLocations")]
     [SerializeField] public BoxCollider2D rightSideSpawn;
     [SerializeField] public BoxCollider2D healthPackSpawn;
