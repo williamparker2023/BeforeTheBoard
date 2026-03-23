@@ -50,6 +50,11 @@ public class BenPlayerTest : NetworkBehaviour
     // ============== Death Effect ============== 
     [SerializeField] GameObject deathParticle;
 
+    // ============== LEVEL UP INFORMATION ==============
+    [Header("Level Up Information")]
+    [SerializeField] float hpIncrease = 10.0f; //Hp that increases with every level up
+    [SerializeField] float rangeDmgIncrease = 1.5f;
+    [SerializeField] float meleeDmgIncrease = 1.5f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -294,6 +299,13 @@ public class BenPlayerTest : NetworkBehaviour
             // gameObject.SetActive(false);
             // NetworkObject.Despawn(true);
         }
+    }
+
+    public void LevelUp()
+    {
+        playerHealth.Value = playerHealth.Value + hpIncrease;
+        meleeDamage = meleeDamage + meleeDmgIncrease;
+        rangeDamage = rangeDamage + rangeDmgIncrease;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

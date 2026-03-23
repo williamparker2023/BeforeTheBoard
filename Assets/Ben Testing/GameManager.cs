@@ -67,6 +67,11 @@ public class GameManager : NetworkBehaviour
 
         if (enemyNum == 0 && bossNum == 0) //If there are no more enemies alive... (WE CAN CHANGE THIS TO WORK ON A TIMER INSTEAD. IT DONT MATTER ATM)
         {
+            if (currentWave.Value % 4 == 0) //if it was a boss wave
+            {
+                ReviveAllPlayers();
+            }
+
             //First, check if the players need to level up
             if (playerXP.Value >= XPNeeded.Value)
             {
@@ -74,10 +79,7 @@ public class GameManager : NetworkBehaviour
                 gameRunning.Value = false; //Pause game cycle
                 playerXP.Value = 0;
                 XPNeeded.Value += XP_NEEDED_PER_LEVEL; //Increase XP needed for next level, this is just an example
-                if (currentWave.Value % 4 == 0) //if a boss wave
-                {
-                    RevivePlayers();
-                }
+                
                 LevelUp();
                 UpdateXPSlider();
             }
@@ -111,6 +113,7 @@ public class GameManager : NetworkBehaviour
         {
             //Spawn a boss
             Debug.Log("Boss Wave! Spawning Boss...");
+            
         }
         else //if a normal wave enemies wave
         {
@@ -153,24 +156,31 @@ public class GameManager : NetworkBehaviour
     void LevelUp()
     {
         Debug.Log("Players leveled up to level " + playerLevel.Value + "!");
-        //Spawn level up GUI
-        // while(true)
-        // {
-        //Wait for player input to choose a level up option
-        //Apply the chosen level up option to the player
-        //Break out of the loop once the player has made their choice
-        //Return false if issue
-        // }
-        //Once all players level up...
+        var players = NetworkManager.Singleton.ConnectedClients.Values;
 
+        foreach (var playerClient in players)
+        {
+            if (playerClient.PlayerObject != null) // Only consider dead players
+            {
+                playerClient.PlayerObject.GetComponent<BenPlayerTest>().LevelUp();
+            }
+        }
+        
         //Go through each player, level them up
         gameRunning.Value = true;
     }
 
-    void RevivePlayers()
+    public void ReviveAllPlayers()
     {
-        Debug.Log("Reviving players for boss wave...");
-        //Find all player objects and revive them to full health
+        var players = NetworkManager.Singleton.ConnectedClients.Values;
+
+        foreach (var playerClient in players)
+        {
+            if (playerClient.PlayerObject != null && playerClient.PlayerObject.CompareTag("DeadPlayer")) // Only consider dead players
+            {
+                playerClient.PlayerObject.GetComponent<BenPlayerTest>().RevivePlayer();
+            }
+        }
     }
 
     [ServerRpc]
