@@ -62,10 +62,9 @@ public class PlayerCustomization : NetworkBehaviour
     [ServerRpc]
     private void RequestSetPlayerClassServerRpc(int classID, ServerRpcParams rpcParams = default)
     {
-        // Server receives the request and updates the NetworkVariable
-        // This syncs the change to all clients automatically
-        var player = GetCurrentPlayer();
-        var playerScript = player.GetComponent<BenPlayerTest>();
+        // Server receives the request and updates the NetworkVariable for this player
+        // Get BenPlayerTest from this same GameObject (PlayerCustomization is on the player)
+        var playerScript = GetComponent<BenPlayerTest>();
         if (playerScript != null)
         {
             playerScript.playerClassID.Value = classID;
