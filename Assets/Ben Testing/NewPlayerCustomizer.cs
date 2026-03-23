@@ -51,18 +51,19 @@ public class NewPlayerCustomizer : NetworkBehaviour
         }
     }
 
-    void UpdateUIForClassSelection(int classID)
+    void UpdateUIForClassSelection()
     {
         if (!IsOwner) return;
 
         classSelectionUI.SetActive(false);
-        
-        if (classID == 0) // Ranged
+        var playerScript = gameObject.GetComponent<BenPlayerTest>();
+
+        if (playerScript.playerClassID.Value == 0) // Ranged
         {
             rangeUpgradesUI.SetActive(true);
             meleeUpgradesUI.SetActive(false);
         }
-        else if (classID == 1) // Melee
+        else if (playerScript.playerClassID.Value == 1) // Melee
         {
             meleeUpgradesUI.SetActive(true);
             rangeUpgradesUI.SetActive(false);
@@ -96,6 +97,6 @@ public class NewPlayerCustomizer : NetworkBehaviour
     private void OnPlayerClassChangedClientRpc(int classID)
     {
         // All clients update UI based on the new class selection
-        UpdateUIForClassSelection(classID);
+        UpdateUIForClassSelection();
     }
 }
