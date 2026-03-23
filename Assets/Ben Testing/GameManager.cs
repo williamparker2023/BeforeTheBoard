@@ -160,8 +160,11 @@ public class GameManager : NetworkBehaviour
                 width = healthPackSpawn.size.x * healthPackSpawn.transform.lossyScale.x;
                 height = healthPackSpawn.size.y * healthPackSpawn.transform.lossyScale.y;
 
-                randomPosX = Random.Range(colliderWorldCenter.x - width / 2f, colliderWorldCenter.x + width / 2f);
-                randomPosY = Random.Range(colliderWorldCenter.y - height / 2f, colliderWorldCenter.y + height / 2f);
+                // Calculate center position for health pack spawn collider
+                Vector2 healthPackColliderWorldCenter = (Vector2)healthPackSpawn.transform.position + healthPackSpawn.offset;
+
+                randomPosX = Random.Range(healthPackColliderWorldCenter.x - width / 2f, healthPackColliderWorldCenter.x + width / 2f);
+                randomPosY = Random.Range(healthPackColliderWorldCenter.y - height / 2f, healthPackColliderWorldCenter.y + height / 2f);
                 Vector2 randomPos = new Vector2(randomPosX, randomPosY);
 
                 var instance = Instantiate(healthPackPrefab, randomPos, Quaternion.identity);
