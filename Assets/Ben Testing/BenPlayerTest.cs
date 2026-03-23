@@ -289,9 +289,18 @@ public class BenPlayerTest : NetworkBehaviour
 
     public void TakeDamage(float damage)
     {
+        if(IsOwner)
+        {
+            if (playerHealth.Value <= 0)
+            {
+                GetComponent<SpriteRenderer>().color = Color.black;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().color = Color.green;
+            }
+        }
         if (!IsServer || isDead.Value) return;
-
-
 
         playerHealth.Value -= damage;
         UpdateHealthBar();

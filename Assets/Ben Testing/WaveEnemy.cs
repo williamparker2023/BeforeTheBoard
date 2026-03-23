@@ -11,7 +11,7 @@ using Unity.VisualScripting;
 public class WaveEnemy : NetworkBehaviour
 {
 
-    [SerializeField] public int enemyXP = 25; //XP given when this enemy dies, this is just an example value, we can change it later
+    [SerializeField] public int enemyXP = 25; //XP given when this enemy dies, this is just an example value, we can change it later 
     [SerializeField] GameManager gameManager;
 
     //======= VARIABLES TO RANDOMIZE
@@ -33,7 +33,7 @@ public class WaveEnemy : NetworkBehaviour
 
     //======== MOVEMENT
     [SerializeField] float SPEED = 5.0f;
-    [SerializeField] float WORLD_LIMIT = 4.0f; // The Y limit where the enemy will stop moving (prevents it from leaving the game space)
+    [SerializeField] float WORLD_LIMIT = 4.1f; // The Y limit where the enemy will stop moving (prevents it from leaving the game space)
     [SerializeField] float WORLD_X_LIMIT = 8.0f; // The X limit where the enemy will stop moving (prevents it from leaving the game space)
     [SerializeField] float NEAREST_ENEMY_DISTANCE = 1.0f; // distance enemies will keep from eachother
 
