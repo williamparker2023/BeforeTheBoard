@@ -57,7 +57,7 @@ public class BenPlayerTest : NetworkBehaviour
     [Header("Level Up Information")]
     [SerializeField] float hpIncrease = 10.0f; //Hp that increases with every level up
     [SerializeField] float rangeDmgIncrease = 1.5f;
-    [SerializeField] float meleeDmgIncrease = 1.5f;
+    [SerializeField] float meleeDmgIncrease = 2.0f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -321,7 +321,7 @@ public class BenPlayerTest : NetworkBehaviour
         }
         else // Melee
         {
-            playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease + 0.5f;
+            playerMaxHealth.Value = playerMaxHealth.Value + (hpIncrease*2);
         }
 
         meleeDamage.Value = meleeDamage.Value + meleeDmgIncrease;
