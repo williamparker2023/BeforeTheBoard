@@ -372,19 +372,25 @@ MonoBehaviour:
   playerHealth:
     m_InternalValue: 10
   healthSlider: {fileID: 5374155682679290237}
-  playerMaxHealth: 10
+  playerMaxHealth:
+    m_InternalValue: 10
   SPEED: 5
-  rangeDamage: 0.5
+  rangeDamage:
+    m_InternalValue: 0.5
   bullet: {fileID: 8316176547245110427, guid: 2bfd406abd3874e1d8bc6ed911f0829b, type: 3}
   canFire: 0
   timer: 0
   TIME_BETWEEN_SHOTS: 0.5
-  meleeDamage: 1
+  meleeDamage:
+    m_InternalValue: 1.5
   meleeHitbox: {fileID: 4012381021246252291, guid: 8a3e1e2f85c2f46d7b6334fa5e2636c2, type: 3}
   canMelee: 0
   meleeTimer: 0
-  TIME_BETWEEN_MELEE: 1
-  deathParticle: {fileID: 7088772639658404154, guid: 09359a49a2c504442b6624eddc72ec8b, type: 3}
+  TIME_BETWEEN_MELEE: 0.8
+  deathParticle: {fileID: 241877497900295800, guid: 09359a49a2c504442b6624eddc72ec8b, type: 3}
+  hpIncrease: 10
+  rangeDmgIncrease: 1.5
+  meleeDmgIncrease: 2
 --- !u!114 &-6054285306322511170
 MonoBehaviour:
   m_ObjectHideFlags: 0

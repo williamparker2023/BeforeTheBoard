@@ -179,8 +179,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveEnemy
   ShowTopMostFoldoutHeaderGroup: 1
-  isAggressive: 1
-  meleeType: 0
+  enemyXP: 25
+  gameManager: {fileID: 0}
+  isAggressive:
+    m_InternalValue: 1
+  meleeType:
+    m_InternalValue: 1
   classType: 0
   enemyHealth:
     m_InternalValue: 10
@@ -188,7 +192,7 @@ MonoBehaviour:
   projectilePrefab: {fileID: 8316176547245110427, guid: 44403a2245c2a4fe0a1eef48c80fb72d, type: 3}
   canFire: 0
   timer: 0
-  TIME_BETWEEN_SHOTS: 0.6
+  TIME_BETWEEN_SHOTS: 0.8
   SPEED: 3
   WORLD_LIMIT: 4.5
   WORLD_X_LIMIT: 9
