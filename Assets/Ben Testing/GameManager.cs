@@ -40,18 +40,43 @@ public class GameManager : NetworkBehaviour
     {
         playerXP.OnValueChanged += OnXPChanged;
         XPNeeded.OnValueChanged += OnXPChanged;
+        currentBG.OnValueChanged += OnCurrentBGChanged;
+        playerLevel.OnValueChanged += OnPlayerLevelChanged;
+        currentWave.OnValueChanged += OnWaveChanged;
+
         UpdateXPSlider();
+        UpdateBackground();
+        UpdatePlayerLevel();
+        UpdateWaveCount();
     }
 
     public override void OnNetworkDespawn()
     {
         playerXP.OnValueChanged -= OnXPChanged;
         XPNeeded.OnValueChanged -= OnXPChanged;
+        currentBG.OnValueChanged -= OnCurrentBGChanged;
+        playerLevel.OnValueChanged -= OnPlayerLevelChanged;
+        currentWave.OnValueChanged -= OnWaveChanged;
     }
 
     private void OnXPChanged<T>(T oldValue, T newValue)
     {
         UpdateXPSlider();
+    }
+
+    private void OnCurrentBGChanged(int oldValue, int newValue)
+    {
+        UpdateBackground();
+    }
+
+    private void OnPlayerLevelChanged(int oldValue, int newValue)
+    {
+        UpdatePlayerLevel();
+    }
+
+    private void OnWaveChanged(int oldValue, int newValue)
+    {
+        UpdateWaveCount();
     }
 
     void Update()
@@ -89,7 +114,7 @@ public class GameManager : NetworkBehaviour
                 gameRunning.Value = false; //Pause game cycle
                 playerXP.Value = 0;
                 XPNeeded.Value += XP_NEEDED_PER_LEVEL; //Increase XP needed for next level, this is just an example
-                
+
                 LevelUp();
                 UpdateXPSlider();
             }
@@ -111,19 +136,32 @@ public class GameManager : NetworkBehaviour
     void NextBG()
     {
         currentBG.Value++;
-        if (currentBG.Value > backgrounds.Length-1) currentBG.Value = 0;
+        if (currentBG.Value > backgrounds.Length - 1) currentBG.Value = 0;
 
-        bgSprite.sprite = backgrounds[currentBG.Value];
+        UpdateBackground();
     }
 
     void UpdateWaveCount()
     {
-        waveText.text = "Wave: " + currentWave.Value.ToString();
+        if (waveText != null)
+        {
+            waveText.text = "Wave: " + currentWave.Value.ToString();
+        }
+    }
+
+    void UpdateBackground()
+    {
+        if (bgSprite == null || backgrounds == null || backgrounds.Length == 0) return;
+        int idx = Mathf.Clamp(currentBG.Value, 0, backgrounds.Length - 1);
+        bgSprite.sprite = backgrounds[idx];
     }
 
     void UpdatePlayerLevel()
     {
-        playerLevelText.text = "Level: " + playerLevel.Value.ToString();
+        if (playerLevelText != null)
+        {
+            playerLevelText.text = "Level: " + playerLevel.Value.ToString();
+        }
     }
 
     public void AddXP(int xp)
@@ -144,7 +182,7 @@ public class GameManager : NetworkBehaviour
         {
             //Spawn a boss
             Debug.Log("Boss Wave! Spawning Boss...");
-            
+
         }
         else //if a normal wave enemies wave
         {
@@ -183,7 +221,7 @@ public class GameManager : NetworkBehaviour
             }
 
             //Spawn HealthPacks
-            for (int i = 0; i < waveNum/2; i++)
+            for (int i = 0; i < waveNum / 2; i++)
             {
                 // Calculate bounds taking into account the scale of the object
                 width = healthPackSpawn.size.x * healthPackSpawn.transform.lossyScale.x;
