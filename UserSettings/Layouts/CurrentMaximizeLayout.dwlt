@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 3526
+  controlID: 6103
   draggingID: 0
 --- !u!114 &2
 MonoBehaviour:
@@ -108,18 +108,18 @@ MonoBehaviour:
       y: 21
       width: 983
       height: 541.5
-    m_Scale: {x: 1.439409, y: 1.439409}
-    m_Translation: {x: 491.50003, y: 270.75}
+    m_Scale: {x: 1, y: 1}
+    m_Translation: {x: 491.5, y: 270.75}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -341.4596
-      y: -188.09802
-      width: 682.9192
-      height: 376.19604
+      x: -491.5
+      y: -270.75
+      width: 983
+      height: 541.5
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 1966, y: 1125}
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 3527
+  controlID: 6104
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -179,7 +179,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 3528
+  controlID: 6105
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -200,8 +200,8 @@ MonoBehaviour:
     y: 0
     width: 309.5
     height: 588.5
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 226}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 6}
   m_Panes:
   - {fileID: 6}
@@ -248,13 +248,22 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: []
+      m_SelectedIDs:
+      - m_Data: 66098
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
+      - m_Data: -71256
+      - m_Data: -70642
+      - m_Data: -69004
       - m_Data: -11158
       - m_Data: -2026
       - m_Data: -1318
+      - m_Data: 64044
+      - m_Data: 64138
+      - m_Data: 64152
+      - m_Data: 64212
+      - m_Data: 64254
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -968,7 +977,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Ben Testing
+    - Assets/!Scenes
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -978,7 +987,7 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Ben Testing
+  - Assets/!Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /Users/benkopf/Desktop/Folders/Projects/Personal/Unity/BeforeTheBoard/BeforeTheBoard
   m_LockTracker:
@@ -987,9 +996,9 @@ MonoBehaviour:
   m_FolderTreeState:
     scrollPos: {x: 0, y: 29}
     m_SelectedIDs:
-    - m_Data: 58150
+    - m_Data: 58146
     m_LastClickedID:
-      m_Data: 58150
+      m_Data: 58146
     m_ExpandedIDs:
     - m_Data: 0
     - m_Data: 58058
@@ -1056,9 +1065,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: []
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_SelectedInstanceIDs:
+    - m_Data: 66098
+    m_LastClickedInstanceID: 66098
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1146,8 +1156,8 @@ MonoBehaviour:
     y: 0
     width: 385.5
     height: 851
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 276, y: 76}
+  m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
