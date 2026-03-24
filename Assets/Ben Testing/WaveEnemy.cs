@@ -114,7 +114,7 @@ public class WaveEnemy : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        if (collision.gameObject.CompareTag("PlayerAttack"))
+        if (collision.gameObject.CompareTag("PlayerAttack") || collision.gameObject.CompareTag("PlayerMeleeAttack"))
         {
             //Take damage, depending on if its melee or projectile hit
             if (collision.gameObject.GetComponent<ProjectileTest>() != null)

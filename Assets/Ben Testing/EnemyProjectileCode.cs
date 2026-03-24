@@ -40,13 +40,12 @@ public class EnemyProjectileCode : NetworkBehaviour
     {
         if (!IsServer) return;
 
-        /*
-        if (collision.gameObject.CompareTag("PlayerAttack"))
+        
+        if (collision.gameObject.CompareTag("PlayerMeleeAttack"))
         {
-            Destroy(collision.gameObject);
             Destroy(gameObject);
         }
-        */
+        
     }
 
     [ServerRpc]
