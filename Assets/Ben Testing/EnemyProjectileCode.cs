@@ -36,7 +36,7 @@ public class EnemyProjectileCode : NetworkBehaviour
         rb.linearVelocity = transform.up * force;
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         if (!IsServer) return;
 
