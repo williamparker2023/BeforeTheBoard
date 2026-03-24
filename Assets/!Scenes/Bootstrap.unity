@@ -175,7 +175,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   ShowTopMostFoldoutHeaderGroup: 1
-  backgrounds: []
+  backgrounds:
+  - {fileID: -855298285791758126, guid: 3a3a6c8cf1e874ea6ae9284343e66df7, type: 3}
+  - {fileID: 6937817954938267909, guid: 92d463c82694646c7b158c77ff8b1b2c, type: 3}
+  - {fileID: -6470460504253458178, guid: 549b13f5307204af9b8fc11c1a996106, type: 3}
+  - {fileID: -4178046375966092550, guid: b437ea047ae9e43289341c37a9825de1, type: 3}
+  bgSprite: {fileID: 2107075055}
+  currentBG:
+    m_InternalValue: 0
   rightSideSpawn: {fileID: 2074512509}
   healthPackSpawn: {fileID: 1993434011}
   enemyPrefab: {fileID: 3972402419994910645, guid: b587cb74e26164882a04e522993f82d7, type: 3}
@@ -2879,12 +2886,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -5
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7837350092795891984, guid: 5fe1c3f846cd44ee2afdd8f4c82fc549, type: 3}
-  m_Color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 1}
+  m_Sprite: {fileID: -855298285791758126, guid: 3a3a6c8cf1e874ea6ae9284343e66df7, type: 3}
+  m_Color: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 29.320002, y: 20.300665}
+  m_Size: {x: 15.36, y: 11.52}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -2899,7 +2906,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.617767, y: 0.617767, z: 0.617767}
+  m_LocalScale: {x: 1.26, y: 1.26, z: 1.26}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}

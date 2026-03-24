@@ -4,11 +4,15 @@ using Unity.Netcode.Components;
 using TMPro;
 using UnityEngine.UI;
 using System.Xml.Serialization;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : NetworkBehaviour
 {
     [Header("Backgrounds")]
     [SerializeField] public Sprite[] backgrounds;
+    [SerializeField] public SpriteRenderer bgSprite;
+    [SerializeField] public NetworkVariable<int> currentBG = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
 
     [Header("SpawnLocations")]
     [SerializeField] public BoxCollider2D rightSideSpawn;
@@ -95,6 +99,21 @@ public class GameManager : NetworkBehaviour
             UpdateWaveCount();
             RunWave(currentWave.Value);
         }
+
+        GameObject[] alivePlayers = GameObject.FindGameObjectsWithTag("Player");
+        if (alivePlayers.Length == 0) //If no more alive players
+        {
+            // SceneManager.LoadScene("GameOver");
+            Debug.Log("GAME OVER");
+        }
+    }
+
+    void NextBG()
+    {
+        currentBG.Value++;
+        if (currentBG.Value > backgrounds.Length-1) currentBG.Value = 0;
+
+        bgSprite.sprite = backgrounds[currentBG.Value];
     }
 
     void UpdateWaveCount()
@@ -120,6 +139,7 @@ public class GameManager : NetworkBehaviour
 
     void RunWave(int waveNum)
     {
+        NextBG();
         if (waveNum % 4 == 0) //if BOSS WAVE
         {
             //Spawn a boss
