@@ -29,6 +29,7 @@ public class GameManager : NetworkBehaviour
     //Every 4th wave is a boss wave, so we'll use this to determine when to spawn bosses
     [SerializeField] public NetworkVariable<int> currentWave = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
     [SerializeField] public TMP_Text waveText;
+    [SerializeField] public TMP_Text playerLevelText;
     [SerializeField] public Slider xpSlider;
 
     public override void OnNetworkSpawn()
@@ -99,6 +100,11 @@ public class GameManager : NetworkBehaviour
     void UpdateWaveCount()
     {
         waveText.text = "Wave: " + currentWave.Value.ToString();
+    }
+
+    void UpdatePlayerLevel()
+    {
+        playerLevelText.text = "Level: " + playerLevel.Value.ToString();
     }
 
     public void AddXP(int xp)
@@ -201,6 +207,7 @@ public class GameManager : NetworkBehaviour
 
         //Go through each player, level them up
         gameRunning.Value = true;
+        UpdatePlayerLevel();
     }
 
     public void ReviveAllPlayers()
