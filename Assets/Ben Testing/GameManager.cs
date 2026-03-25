@@ -314,6 +314,17 @@ public class GameManager : NetworkBehaviour
             }
         }
 
+        //=========== Start implementation of making enemies with more health, but it needs work. Wont happen for the prototype
+        // GameObject[] enemies = GameObject.FindGameObjectsWithTag("WaveEnemy");
+        // if (enemies != null)
+        // {
+        //     foreach (var enemy in enemies)
+        //     {
+        //         WaveEnemy script = enemy.GetComponent<WaveEnemy>();
+        //         script.enemyHealth.Value = script.enemyHealth.Value + 10;
+        //     }
+        // }
+
         //Go through each player, level them up
         gameRunning.Value = true;
         UpdatePlayerLevel();
