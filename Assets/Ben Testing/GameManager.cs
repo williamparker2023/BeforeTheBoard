@@ -135,9 +135,7 @@ public class GameManager : NetworkBehaviour
 
     void NextBG()
     {
-        currentBG.Value++;
-        if (currentBG.Value > backgrounds.Length - 1) currentBG.Value = 0;
-
+        currentBG.Value = (currentBG.Value + 1) % backgrounds.Length;
         UpdateBackground();
     }
 
@@ -152,7 +150,7 @@ public class GameManager : NetworkBehaviour
     void UpdateBackground()
     {
         if (bgSprite == null || backgrounds == null || backgrounds.Length == 0) return;
-        int idx = Mathf.Clamp(currentBG.Value, 0, backgrounds.Length - 1);
+        int idx = ((currentBG.Value % backgrounds.Length) + backgrounds.Length) % backgrounds.Length;
         bgSprite.sprite = backgrounds[idx];
     }
 
@@ -177,7 +175,8 @@ public class GameManager : NetworkBehaviour
 
     void RunWave(int waveNum)
     {
-        NextBG();
+        currentBG.Value = (waveNum - 1) % backgrounds.Length;
+        UpdateBackground();
         if (waveNum % 4 == 0) //if BOSS WAVE
         {
             //Spawn a boss

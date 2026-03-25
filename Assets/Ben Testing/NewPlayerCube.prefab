@@ -129,6 +129,7 @@ GameObject:
   - component: {fileID: -1708614259379764059}
   - component: {fileID: -450530428070712570}
   - component: {fileID: -3420164780803242845}
+  - component: {fileID: -4627307371617187494}
   m_Layer: 0
   m_Name: NewPlayerCube
   m_TagString: Player
@@ -398,14 +399,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1146733968957911114}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3260c380782d44361bc9a781ba044c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewPlayerCustomizer
   ShowTopMostFoldoutHeaderGroup: 1
   classSelectionUI: {fileID: 0}
-  meleeUpgradesUI: {fileID: 0}
+  meleeUpgradesUI: {fileID: 764176449109398081, guid: c6cffed9d41a3414a8688bf847e08d36, type: 3}
   rangeUpgradesUI: {fileID: 0}
 --- !u!50 &-1708614259379764059
 Rigidbody2D:
@@ -497,6 +498,21 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &-4627307371617187494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1146733968957911114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ee61409a3295734c8070aeac7441c52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAppearance
+  ShowTopMostFoldoutHeaderGroup: 1
+  bishopSprite: {fileID: 8448392460488950729, guid: d333bc23a8af6be4fa4518dae72a0a88, type: 3}
+  rookSprite: {fileID: -290781972129222824, guid: b0e0a7512e9166841bd9d5df1ae0cf73, type: 3}
 --- !u!1 &3979243356967318781
 GameObject:
   m_ObjectHideFlags: 0

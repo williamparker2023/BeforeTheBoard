@@ -194,6 +194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAppearance
   ShowTopMostFoldoutHeaderGroup: 1
+  bishopSprite: {fileID: 8448392460488950729, guid: d333bc23a8af6be4fa4518dae72a0a88, type: 3}
+  rookSprite: {fileID: -290781972129222824, guid: b0e0a7512e9166841bd9d5df1ae0cf73, type: 3}
 --- !u!114 &5780618631054214028
 MonoBehaviour:
   m_ObjectHideFlags: 0

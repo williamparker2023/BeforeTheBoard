@@ -5,58 +5,41 @@ using Unity.Netcode;
 public class PlayerAppearance : NetworkBehaviour
 {
     private SpriteRenderer sr;
+    private BenPlayerTest playerTest;
 
-    private NetworkVariable<Color32> netColor = new NetworkVariable<Color32>(
-        default,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Server
-    );
+    [SerializeField] private Sprite bishopSprite; // for ranged class (0)
+    [SerializeField] private Sprite rookSprite; // for melee class (1)
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
+        playerTest = GetComponent<BenPlayerTest>();
     }
 
     public override void OnNetworkSpawn()
     {
-        if (IsOwner)
-        {
-            GetComponent<SpriteRenderer>().color = Color.green;
-        }
-        // if (IsServer)
-        // {
-        //     // default for everyone based on OwnerClientId
-        //     byte r = (byte)(50 + (OwnerClientId * 70) % 200);
-        //     byte g = (byte)(50 + (OwnerClientId * 120) % 200);
-        //     byte b = (byte)(50 + (OwnerClientId * 170) % 200);
-        //     netColor.Value = new Color32(r, g, b, 255);
-        // }
-
-        // if (IsOwner)
-        // {
-        //     SetMyColorServerRpc(new Color32(255, 0, 0, 255)); // my cube red
-        // }
+        playerTest.playerClassID.OnValueChanged += OnClassChanged;
+        UpdateSprite(playerTest.playerClassID.Value);
     }
 
     public override void OnNetworkDespawn()
     {
-        netColor.OnValueChanged -= OnColorChanged;
+        if (playerTest != null)
+        {
+            playerTest.playerClassID.OnValueChanged -= OnClassChanged;
+        }
     }
 
-    private void OnColorChanged(Color32 oldColor, Color32 newColor)
+    private void OnClassChanged(int oldClass, int newClass)
     {
-        ApplyColor(newColor);
+        UpdateSprite(newClass);
     }
 
-    private void ApplyColor(Color32 c)
+    private void UpdateSprite(int classID)
     {
         if (sr != null)
-            sr.color = c;
-    }
-
-    [ServerRpc]
-    private void SetMyColorServerRpc(Color32 color)
-    {
-        netColor.Value = color;
+        {
+            sr.sprite = (classID == 0) ? bishopSprite : rookSprite;
+        }
     }
 }

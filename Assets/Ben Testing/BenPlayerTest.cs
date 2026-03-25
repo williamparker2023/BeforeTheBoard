@@ -63,11 +63,6 @@ public class BenPlayerTest : NetworkBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if(IsOwner)
-        {
-            GetComponent<SpriteRenderer>().color = Color.green;
-        }
-
         rb = GetComponent<Rigidbody2D>();
         mainCam = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
 
@@ -143,11 +138,11 @@ public class BenPlayerTest : NetworkBehaviour
         {
             PlayerMovement();
 
-            if(playerClassID.Value == 0) //If ranged
+            if (playerClassID.Value == 0) //If ranged
             {
                 ShootProjectile();
             }
-            else if(playerClassID.Value == 1) //If melee
+            else if (playerClassID.Value == 1) //If melee
             {
                 MeleeAttack();
             }
@@ -203,7 +198,7 @@ public class BenPlayerTest : NetworkBehaviour
 
                 MeleeAttack meleeScript = instance.GetComponent<MeleeAttack>(); //Set damage on the melee hitbox
                 meleeScript.Initialize(meleeDamage.Value);
-                
+
                 instanceNetworkObject.SpawnWithOwnership(OwnerClientId);
             }
             else if (IsClient)
@@ -275,31 +270,12 @@ public class BenPlayerTest : NetworkBehaviour
         gameObject.tag = "Player";
         playerHealth.Value = playerMaxHealth.Value;
         Debug.Log("Player " + OwnerClientId + " has been revived.");
-        if(IsOwner)
-        {
-            GetComponent<SpriteRenderer>().color = Color.green; //Revive visual indicator
-
-        }
-        else
-        {
-            GetComponent<SpriteRenderer>().color = Color.white; //Revive visual indicator
-        }
+        GetComponent<SpriteRenderer>().color = Color.white; //Revive visual indicator
         isDead.Value = false;
     }
 
     public void TakeDamage(float damage)
     {
-        if(IsOwner)
-        {
-            if (playerHealth.Value <= 0)
-            {
-                GetComponent<SpriteRenderer>().color = Color.black;
-            }
-            else
-            {
-                GetComponent<SpriteRenderer>().color = Color.green;
-            }
-        }
         if (!IsServer || isDead.Value) return;
 
         playerHealth.Value -= damage;
@@ -315,13 +291,13 @@ public class BenPlayerTest : NetworkBehaviour
 
     public void LevelUp()
     {
-        if(playerClassID.Value == 0) // Ranged
+        if (playerClassID.Value == 0) // Ranged
         {
             playerMaxHealth.Value = playerMaxHealth.Value + hpIncrease;
         }
         else // Melee
         {
-            playerMaxHealth.Value = playerMaxHealth.Value + (hpIncrease*2);
+            playerMaxHealth.Value = playerMaxHealth.Value + (hpIncrease * 2);
         }
 
         meleeDamage.Value = meleeDamage.Value + meleeDmgIncrease;

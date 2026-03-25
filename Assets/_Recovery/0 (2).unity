@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3009208710
+  GlobalObjectIdHash: 2680548170
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -176,10 +176,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   ShowTopMostFoldoutHeaderGroup: 1
   backgrounds:
-  - {fileID: 1208040086343421634, guid: 8129d83d8f2ac0143b5d22000441474d, type: 3}
-  - {fileID: -5412910156287300836, guid: 5667374a6309e2f49aa85cfc85a60f93, type: 3}
-  - {fileID: -1455096403836856330, guid: 1d8723e6ef2be594e9b11716fde9afa5, type: 3}
-  - {fileID: 1248784056254802929, guid: ba075ab0013d98d44acd2261c20fbb88, type: 3}
+  - {fileID: -855298285791758126, guid: 3a3a6c8cf1e874ea6ae9284343e66df7, type: 3}
+  - {fileID: 6937817954938267909, guid: 92d463c82694646c7b158c77ff8b1b2c, type: 3}
+  - {fileID: -6470460504253458178, guid: 549b13f5307204af9b8fc11c1a996106, type: 3}
+  - {fileID: -4178046375966092550, guid: b437ea047ae9e43289341c37a9825de1, type: 3}
   bgSprite: {fileID: 2107075055}
   currentBG:
     m_InternalValue: 0
@@ -2478,7 +2478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3548668052
+  GlobalObjectIdHash: 3061983530
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
