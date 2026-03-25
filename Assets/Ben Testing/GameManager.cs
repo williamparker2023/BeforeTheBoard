@@ -179,9 +179,8 @@ public class GameManager : NetworkBehaviour
 
             if (totalPlayers > 0 && aliveCount == 0)
             {
-                Debug.Log("GAME OVER");
+                SceneManager.LoadScene("GameOver");
                 gameEnded = true;
-                // SceneManager.LoadScene("GameOver");
             }
         }
     }
