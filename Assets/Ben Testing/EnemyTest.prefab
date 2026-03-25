@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.495283, b: 0.495283, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -205,6 +205,9 @@ MonoBehaviour:
   canMelee: 0
   TIME_BETWEEN_HITS: 2
   DISTANCE_TO_HIT: 1
+  slimeSprite: {fileID: 368543389579951487, guid: 6636f3ef999c751438f5ea88ddd864c7, type: 3}
+  beeSprite: {fileID: -4656658513182322354, guid: 13fddbbef3ac75b4183a3992adf186f2, type: 3}
+  batSprite: {fileID: -697763020151794088, guid: 6d48ccd6a8140da46b53bba5fc772444, type: 3}
 --- !u!61 &3245105852844971496
 BoxCollider2D:
   m_ObjectHideFlags: 0

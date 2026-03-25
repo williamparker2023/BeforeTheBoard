@@ -50,6 +50,11 @@ public class WaveEnemy : NetworkBehaviour
     [SerializeField] float TIME_BETWEEN_HITS = 2.0f;
     [SerializeField] float DISTANCE_TO_HIT = 4.0f; //distance the enemy needs to be within to try to the player to  melee hit
 
+    // ======= SPRITES
+    [Header("Enemy Sprites")]
+    [SerializeField] Sprite slimeSprite;
+    [SerializeField] Sprite beeSprite;
+    [SerializeField] Sprite batSprite;
 
     public override void OnNetworkSpawn()
     {
@@ -69,29 +74,44 @@ public class WaveEnemy : NetworkBehaviour
             if (Random.value > 0.5f)
             {
                 isAggressive.Value = true;
-                GetComponent<SpriteRenderer>().color = Color.red;
-
             }
             else
             {
                 isAggressive.Value = false;
-                GetComponent<SpriteRenderer>().color = Color.orange;
-            }
-        }
-        else
-        {
-            if (isAggressive.Value)
-            {
-                GetComponent<SpriteRenderer>().color = Color.red;
-            }
-            else
-            {
-                GetComponent<SpriteRenderer>().color = Color.orange;
             }
         }
 
+        // Set sprite based on enemy type
+        SetEnemySprite();
+
         gameManager = Object.FindFirstObjectByType<GameManager>();
         //Randomize between melee and ranged enemy
+    }
+
+    private void SetEnemySprite()
+    {
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null) return;
+
+        if (meleeType.Value)
+        {
+            // Melee enemy is always a slime
+            spriteRenderer.sprite = slimeSprite;
+        }
+        else
+        {
+            // Ranged enemy
+            if (isAggressive.Value)
+            {
+                // Aggressive ranged is a bat
+                spriteRenderer.sprite = batSprite;
+            }
+            else
+            {
+                // Timid ranged is a bee
+                spriteRenderer.sprite = beeSprite;
+            }
+        }
     }
 
     void Update()
