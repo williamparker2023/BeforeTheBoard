@@ -9,7 +9,7 @@ public class GoToMainMenu : NetworkBehaviour
         // NetworkManager.Singleton.Shutdown();
         // SceneManager.LoadScene("MainMenu");
         NetworkManager.Singleton.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
-        NetworkManager.Singleton.Shutdown();
+        // NetworkManager.Singleton.Shutdown();
 
         // Application.Quit();
         //  System.Diagnostics.Process.Start(Application.dataPath.Replace("_Data", ".exe")); //new program Application.Quit(); //kill current process
