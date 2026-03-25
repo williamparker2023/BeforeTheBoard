@@ -80,7 +80,7 @@ public class WaveEnemy : NetworkBehaviour
         }
         else
         {
-            if(isAggressive.Value)
+            if (isAggressive.Value)
             {
                 GetComponent<SpriteRenderer>().color = Color.red;
             }
@@ -125,7 +125,10 @@ public class WaveEnemy : NetworkBehaviour
             {
                 enemyHealth.Value -= collision.gameObject.GetComponent<MeleeAttack>().damage;
             }
-            collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            if (collision.gameObject.GetComponent<NetworkObject>().IsSpawned)
+            {
+                collision.gameObject.GetComponent<NetworkObject>().Despawn(true);
+            }
 
             if (enemyHealth.Value <= 0)
             {
@@ -157,7 +160,7 @@ public class WaveEnemy : NetworkBehaviour
             return; // No players left, so don't move
         }
 
-        if(!IsServer) return;
+        if (!IsServer) return;
 
         // Making sure the enemy isnt out of bounds
         if (transform.position.y < -WORLD_LIMIT)
@@ -172,7 +175,7 @@ public class WaveEnemy : NetworkBehaviour
             // Debug.Log("Out of bounds!");
             return;
         }
-        if(transform.position.x < -WORLD_X_LIMIT)
+        if (transform.position.x < -WORLD_X_LIMIT)
         {
             transform.position = new Vector2(-WORLD_X_LIMIT + 0.1f, transform.position.y);
             // Debug.Log("Out of bounds!");
@@ -195,21 +198,22 @@ public class WaveEnemy : NetworkBehaviour
 
         if (isAggressive.Value) //Aggressive: Keep a relative distance from the nearest player (STOP_DISTANCE / RETREAT DISTANCE)
         {
-            if(Vector2.Distance(transform.position, nearestPlayer.position) > STOP_DISTANCE)
+            if (Vector2.Distance(transform.position, nearestPlayer.position) > STOP_DISTANCE)
             {
                 transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, SPEED * Time.deltaTime);
             }
-            else if(Vector2.Distance(transform.position, nearestPlayer.position) < STOP_DISTANCE && Vector2.Distance(transform.position, nearestPlayer.position) > RETREAT_DISTANCE)
+            else if (Vector2.Distance(transform.position, nearestPlayer.position) < STOP_DISTANCE && Vector2.Distance(transform.position, nearestPlayer.position) > RETREAT_DISTANCE)
             {
                 transform.position = this.transform.position;
             }
-            else if(Vector2.Distance(transform.position, nearestPlayer.position) < RETREAT_DISTANCE)
+            else if (Vector2.Distance(transform.position, nearestPlayer.position) < RETREAT_DISTANCE)
             {
                 transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, -SPEED * Time.deltaTime);
             }
-        } else //Timid: Stay as far from players as possible (TIMID_DISTANCE)
+        }
+        else //Timid: Stay as far from players as possible (TIMID_DISTANCE)
         {
-            if(Vector2.Distance(transform.position, nearestPlayer.position) < TIMID_DISTANCE)
+            if (Vector2.Distance(transform.position, nearestPlayer.position) < TIMID_DISTANCE)
             {
                 transform.position = Vector2.MoveTowards(transform.position, nearestPlayer.position, -SPEED * Time.deltaTime);
             }
@@ -229,7 +233,7 @@ public class WaveEnemy : NetworkBehaviour
             return; // No players left, so don't move
         }
 
-        if(!IsServer) return;
+        if (!IsServer) return;
 
         // Making sure the enemy isnt out of bounds
         if (transform.position.y < -WORLD_LIMIT)
@@ -244,7 +248,7 @@ public class WaveEnemy : NetworkBehaviour
             // Debug.Log("Out of bounds!");
             return;
         }
-        if(transform.position.x < -WORLD_X_LIMIT)
+        if (transform.position.x < -WORLD_X_LIMIT)
         {
             transform.position = new Vector2(-WORLD_X_LIMIT + 0.1f, transform.position.y);
             // Debug.Log("Out of bounds!");
@@ -280,7 +284,7 @@ public class WaveEnemy : NetworkBehaviour
             }
         }
 
-        if(canFire)
+        if (canFire)
         {
             Transform closestPlayer = GetClosestPlayer();
             if (closestPlayer == null)
@@ -289,9 +293,9 @@ public class WaveEnemy : NetworkBehaviour
             }
 
             Vector2 direction = closestPlayer.position - transform.position;
-        
+
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle-90));
+            Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
 
             if (IsServer)
             {
@@ -322,9 +326,9 @@ public class WaveEnemy : NetworkBehaviour
             }
         }
 
-        if(canMelee)
+        if (canMelee)
         {
-            
+
             Transform closestPlayer = GetClosestPlayer();
             if (closestPlayer == null)
             {
@@ -334,9 +338,9 @@ public class WaveEnemy : NetworkBehaviour
             if (Vector2.Distance(transform.position, closestPlayer.position) < DISTANCE_TO_HIT)
             {
                 Vector2 direction = closestPlayer.position - transform.position;
-            
+
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle-90));
+                Quaternion targetRotation = Quaternion.Euler(new Vector3(0, 0, angle - 90));
 
                 if (IsServer)
                 {

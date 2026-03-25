@@ -35,6 +35,44 @@ public class GameManager : NetworkBehaviour
     [SerializeField] public TMP_Text waveText;
     [SerializeField] public TMP_Text playerLevelText;
     [SerializeField] public Slider xpSlider;
+    [SerializeField] private bool gameEnded = false;
+    [SerializeField] private float gameOverCheckDelay = 5f;
+    private bool canCheckGameOver = false;
+    private float gameOverCheckStartTime = 0f;
+
+    private bool AllPlayersSpawned()
+    {
+        if (NetworkManager.Singleton == null) return false;
+
+        int totalPlayers = NetworkManager.Singleton.ConnectedClients.Count;
+        if (totalPlayers == 0) return false;
+
+        foreach (var client in NetworkManager.Singleton.ConnectedClients.Values)
+        {
+            if (client.PlayerObject == null)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void StartGameOverGracePeriod()
+    {
+        canCheckGameOver = false;
+        gameOverCheckStartTime = Time.time;
+    }
+
+    private void UpdateGameOverGracePeriod()
+    {
+        if (canCheckGameOver) return;
+
+        if (!AllPlayersSpawned()) return;
+
+        if (Time.time - gameOverCheckStartTime >= gameOverCheckDelay)
+        {
+            canCheckGameOver = true;
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -48,6 +86,11 @@ public class GameManager : NetworkBehaviour
         UpdateBackground();
         UpdatePlayerLevel();
         UpdateWaveCount();
+
+        if (IsServer)
+        {
+            StartGameOverGracePeriod();
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -125,11 +168,21 @@ public class GameManager : NetworkBehaviour
             RunWave(currentWave.Value);
         }
 
+        UpdateGameOverGracePeriod();
+
         GameObject[] alivePlayers = GameObject.FindGameObjectsWithTag("Player");
-        if (alivePlayers.Length == 0) //If no more alive players
+
+        if (canCheckGameOver && currentWave.Value > 0 && !gameEnded)
         {
-            // SceneManager.LoadScene("GameOver");
-            Debug.Log("GAME OVER");
+            int totalPlayers = NetworkManager.Singleton.ConnectedClients.Count;
+            int aliveCount = alivePlayers.Length;
+
+            if (totalPlayers > 0 && aliveCount == 0)
+            {
+                Debug.Log("GAME OVER");
+                gameEnded = true;
+                // SceneManager.LoadScene("GameOver");
+            }
         }
     }
 
